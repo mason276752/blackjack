@@ -1,0 +1,15 @@
+{
+  "sessionStatistics": "回合統計",
+  "handsPlayed": "已玩局數",
+  "winRate": "勝率",
+  "handsWon": "獲勝局數",
+  "handsLost": "失敗局數",
+  "blackjacks": "二十一點數",
+  "busts": "爆牌數",
+  "totalWagered": "總下注",
+  "totalWon": "總贏得",
+  "netProfit": "淨利潤",
+  "avgBet": "平均注額",
+  "showStats": "顯示統計",
+  "hideStats": "隱藏"
+}

@@ -1,0 +1,15 @@
+{
+  "sessionStatistics": "Session Statistics",
+  "handsPlayed": "Hands Played",
+  "winRate": "Win Rate",
+  "handsWon": "Hands Won",
+  "handsLost": "Hands Lost",
+  "blackjacks": "Blackjacks",
+  "busts": "Busts",
+  "totalWagered": "Total Wagered",
+  "totalWon": "Total Won",
+  "netProfit": "Net Profit",
+  "avgBet": "Avg Bet",
+  "showStats": "Show Stats",
+  "hideStats": "Hide"
+}

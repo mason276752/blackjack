@@ -1,0 +1,16 @@
+{
+  "cardCounting": "算牌",
+  "runningCount": "流水計數",
+  "trueCount": "真實計數",
+  "decksRemaining": "剩餘牌組",
+  "showCardCount": "顯示算牌",
+  "hideCardCount": "隱藏算牌",
+  "systemSelector": "算牌系統：",
+  "hiLo": "Hi-Lo",
+  "ko": "KO",
+  "omegaII": "Omega II",
+  "changeWarningTitle": "更改算牌系統？",
+  "changeWarningMessage": "更改算牌系統將重置流水計數和真實計數至零。是否繼續？",
+  "confirm": "確認",
+  "cancel": "取消"
+}

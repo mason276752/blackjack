@@ -1,0 +1,45 @@
+{
+  "aiPlayer": "AI 代打",
+  "play": "開始",
+  "pause": "暫停",
+  "stop": "停止",
+  "gameSpeed": "遊戲速度",
+  "fast": "快速",
+  "slow": "慢速",
+  "veryFast": "極速",
+  "currentDecision": "當前決策",
+  "roundsPlayed": "已玩回合",
+  "decisionsCount": "決策次數",
+  "avgBetSize": "平均下注",
+  "errorDetected": "檢測到錯誤",
+  "retry": "重試",
+
+  "reasoning": {
+    "bet": {
+      "favorable": "有利",
+      "unfavorable": "不利",
+      "neutral": "中性",
+      "template": "真實計數：{{trueCount}}（{{countDesc}}），下注 {{units}} 單位 = ${{betAmount}}"
+    },
+    "action": {
+      "soft": "軟牌",
+      "hard": "硬牌",
+      "template": "{{handType}} {{handValue}} 對莊家 {{dealerValue}}：策略 {{strategyCode}} → {{action}}",
+      "deviationTemplate": "{{baseReasoning}} | I18 偏差（TC {{trueCount}}）：{{deviationDescription}}"
+    },
+    "insurance": {
+      "takeInsurance": "真實計數 +{{trueCount}} >= +3：保險有正期望值",
+      "declineInsurance": "真實計數 {{trueCount}} < +3：保險有負期望值",
+      "insufficientBalance": "真實計數 +{{trueCount}} 有利於保險，但餘額不足"
+    }
+  },
+
+  "status": {
+    "dealerPlaying": "莊家進行中...",
+    "waitingNextRound": "等待 {{seconds}} 秒後開始下一回合...",
+    "startingNextRound": "開始下一回合...",
+    "aiStopped": "AI 已停止：{{reason}}",
+    "insufficientBalance": "餘額不足無法啟動 AI",
+    "aiPausedRuleChange": "規則變更，AI 已暫停"
+  }
+}

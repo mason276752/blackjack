@@ -1,0 +1,50 @@
+{
+  "title": "Game Rules Configuration",
+  "close": "Close",
+
+  "presetsSection": "Presets",
+  "vegasStrip": "Vegas Strip",
+  "vegasStripDesc": "(6 decks, S17, 3:2, DAS)",
+  "singleDeck": "Single Deck",
+  "singleDeckDesc": "(1 deck, H17, 6:5, no DAS)",
+  "atlanticCity": "Atlantic City",
+  "atlanticCityDesc": "(8 decks, S17, 3:2, DAS)",
+  "custom": "Custom",
+
+  "basicSection": "Basic Rules",
+  "deckCount": "Number of Decks",
+  "dealerRule": "Dealer Rule",
+  "dealerS17": "Stand on Soft 17 (S17)",
+  "dealerH17": "Hit on Soft 17 (H17)",
+  "blackjackPayout": "Blackjack Payout",
+  "payout3to2": "3:2 (150%)",
+  "payout6to5": "6:5 (120%)",
+  "penetration": "Deck Penetration",
+
+  "doublingSection": "Doubling",
+  "doubleAfterSplit": "Double After Split (DAS)",
+  "doubleOn": "Double On",
+  "doubleAny": "Any",
+  "double9to11": "9-11",
+  "double10to11": "10-11",
+
+  "splittingSection": "Splitting",
+  "maxSplits": "Maximum Splits",
+  "resplitAces": "Resplit Aces",
+  "hitSplitAces": "Hit Split Aces",
+
+  "otherSection": "Other Options",
+  "lateSurrender": "Late Surrender",
+  "insurance": "Insurance Allowed",
+
+  "applyChanges": "Apply Changes",
+  "cancel": "Cancel",
+  "confirmTitle": "Reset Game?",
+  "confirmMessage": "Changing rules will reset your balance to $1000 and clear all statistics. Continue?",
+  "confirmButton": "Confirm",
+  "cancelButton": "Cancel",
+  "rulesButton": "Rules",
+  "panelTitle": "Game Rules",
+  "locked": "Rules are locked during gameplay",
+  "unlocked": "Edit rules (clear bet to unlock)"
+}

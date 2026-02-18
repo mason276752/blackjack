@@ -1,0 +1,16 @@
+{
+  "cardCounting": "Card Counting",
+  "runningCount": "Running Count",
+  "trueCount": "True Count",
+  "decksRemaining": "Decks Remaining",
+  "showCardCount": "Show Card Count",
+  "hideCardCount": "Hide Card Count",
+  "systemSelector": "Counting System:",
+  "hiLo": "Hi-Lo",
+  "ko": "KO",
+  "omegaII": "Omega II",
+  "changeWarningTitle": "Change Counting System?",
+  "changeWarningMessage": "Changing the counting system will reset the running count and true count to zero. Continue?",
+  "confirm": "Confirm",
+  "cancel": "Cancel"
+}

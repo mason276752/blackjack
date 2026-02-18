@@ -1,0 +1,13 @@
+{
+  "title": "21點",
+  "balance": "餘額",
+  "bet": "下注",
+  "currentBet": "當前注額",
+  "newRound": "新回合",
+  "resetGame": "重置遊戲",
+  "show": "顯示",
+  "hide": "隱藏",
+  "dealCards": "發牌",
+  "clearBet": "清除注額",
+  "dealer": "莊家"
+}

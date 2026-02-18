@@ -1,0 +1,11 @@
+{
+  "blackjack": "二十一點！",
+  "bust": "爆牌",
+  "win": "贏得 ${{amount}}",
+  "lose": "輸了",
+  "push": "平手",
+  "surrender": "投降 ${{amount}}",
+  "soft": "軟牌 {{value}}",
+  "bet": "注額",
+  "bustValue": "爆牌 ({{value}})"
+}

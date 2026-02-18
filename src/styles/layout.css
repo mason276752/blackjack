@@ -1,0 +1,110 @@
+/* Layout CSS Variables */
+:root {
+  /* Layout dimensions */
+  --panel-width: 400px;
+  --panel-gap: 20px;
+  --center-min-width: 600px;
+  --center-max-width: 800px;
+
+  /* Colors */
+  --bg-primary: #1e293b;
+  --bg-secondary: #0f172a;
+  --bg-panel: rgba(30, 41, 59, 0.95);
+  --border-color: rgba(255, 255, 255, 0.1);
+
+  /* Z-indices */
+  --z-panel-fixed: 10;
+  --z-panel-overlay: 100;
+  --z-backdrop: 99;
+  --z-modal: 200;
+
+  /* Transitions */
+  --transition-fast: 150ms;
+  --transition-medium: 300ms;
+  --transition-slow: 500ms;
+}
+
+/* Desktop Layout (≥1400px) */
+@media (min-width: 1400px) {
+  .game-layout {
+    display: grid;
+    grid-template-columns: var(--panel-width) 1fr var(--panel-width);
+    gap: var(--panel-gap);
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .game-layout__panel {
+    background-color: var(--bg-panel);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+  }
+
+  .game-layout__center {
+    min-width: var(--center-min-width);
+    max-width: var(--center-max-width);
+  }
+}
+
+/* Tablet Layout (900px - 1399px) */
+@media (min-width: 900px) and (max-width: 1399px) {
+  .game-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 0 20px;
+  }
+
+  .game-layout__panel {
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    width: var(--panel-width);
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    overflow-y: auto;
+    z-index: var(--z-panel-overlay);
+    transition: transform var(--transition-medium) ease-in-out;
+  }
+
+  .game-layout__panel--left {
+    left: 0;
+    transform: translateX(-100%);
+    border-radius: 0 12px 12px 0;
+  }
+
+  .game-layout__panel--left.open {
+    transform: translateX(0);
+  }
+
+  .game-layout__panel--right {
+    right: 0;
+    transform: translateX(100%);
+    border-radius: 12px 0 0 12px;
+  }
+
+  .game-layout__panel--right.open {
+    transform: translateX(0);
+  }
+}
+
+/* Mobile Layout (<900px) */
+@media (max-width: 899px) {
+  .game-layout {
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+  }
+
+  .game-layout__panel {
+    display: none; /* Will become bottom sheet */
+  }
+
+  .game-layout__center {
+    width: 100%;
+  }
+}

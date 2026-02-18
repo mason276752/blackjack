@@ -1,0 +1,13 @@
+{
+  "title": "Blackjack",
+  "balance": "Balance",
+  "bet": "Bet",
+  "currentBet": "Current Bet",
+  "newRound": "New Round",
+  "resetGame": "Reset Game",
+  "show": "Show",
+  "hide": "Hide",
+  "dealCards": "Deal Cards",
+  "clearBet": "Clear Bet",
+  "dealer": "Dealer"
+}

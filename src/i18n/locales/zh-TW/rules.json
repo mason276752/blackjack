@@ -1,0 +1,50 @@
+{
+  "title": "遊戲規則設定",
+  "close": "關閉",
+
+  "presetsSection": "預設規則",
+  "vegasStrip": "拉斯維加斯大道",
+  "vegasStripDesc": "(6副牌, S17, 3:2, DAS)",
+  "singleDeck": "單副牌",
+  "singleDeckDesc": "(1副牌, H17, 6:5, 無DAS)",
+  "atlanticCity": "大西洋城",
+  "atlanticCityDesc": "(8副牌, S17, 3:2, DAS)",
+  "custom": "自訂",
+
+  "basicSection": "基本規則",
+  "deckCount": "牌組數量",
+  "dealerRule": "莊家規則",
+  "dealerS17": "軟17停牌 (S17)",
+  "dealerH17": "軟17要牌 (H17)",
+  "blackjackPayout": "二十一點賠率",
+  "payout3to2": "3:2 (150%)",
+  "payout6to5": "6:5 (120%)",
+  "penetration": "發牌深度",
+
+  "doublingSection": "加倍",
+  "doubleAfterSplit": "分牌後可加倍 (DAS)",
+  "doubleOn": "加倍限制",
+  "doubleAny": "任意",
+  "double9to11": "9-11點",
+  "double10to11": "10-11點",
+
+  "splittingSection": "分牌",
+  "maxSplits": "最大分牌次數",
+  "resplitAces": "可再分A",
+  "hitSplitAces": "分A後可要牌",
+
+  "otherSection": "其他選項",
+  "lateSurrender": "延遲投降",
+  "insurance": "可購買保險",
+
+  "applyChanges": "套用變更",
+  "cancel": "取消",
+  "confirmTitle": "重置遊戲？",
+  "confirmMessage": "變更規則將重置您的餘額至$1000並清除所有統計資料。是否繼續？",
+  "confirmButton": "確認",
+  "cancelButton": "取消",
+  "rulesButton": "規則",
+  "panelTitle": "遊戲規則",
+  "locked": "遊戲進行中無法更改規則",
+  "unlocked": "編輯規則（清除下注以解鎖）"
+}
