@@ -422,7 +422,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         ...state,
         dealerHand: newDealerHand,
         dealerValue,
-        message: dealerValue > 21 ? 'dealerBust' : 'dealerHits',
+        message: dealerValue > 21 ? 'dealerBusts' : 'dealerHits',
         runningCount: newRunningCount,
         cardsRemaining: action.cardsRemaining,
         totalCards: action.totalCards,
