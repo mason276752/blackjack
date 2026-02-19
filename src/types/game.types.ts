@@ -120,6 +120,7 @@ export interface GameState {
   // Player state
   balance: number;
   currentBet: number;
+  lastBet: number; // Remember previous round bet amount
   hands: PlayerHand[];
   activeHandIndex: number;
   insuranceBet: number;

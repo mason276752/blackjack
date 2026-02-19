@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGame } from '../../context/GameContext';
+import { calculateRTP, getRTPCategory, compareRTPToExpected } from '../../lib/stats/rtpCalculator';
+import { HouseEdgeCalculator } from '../../lib/strategy/HouseEdgeCalculator';
 
 export function StatsPanel() {
   const { t } = useTranslation(['stats', 'common']);
@@ -9,6 +11,17 @@ export function StatsPanel() {
   const stats = state.statistics;
   const winRate = stats.handsPlayed > 0 ? (stats.handsWon / stats.handsPlayed * 100).toFixed(1) : '0.0';
   const avgBet = stats.handsPlayed > 0 ? (stats.totalWagered / stats.handsPlayed).toFixed(2) : '0.00';
+
+  // Calculate RTP
+  const rtpData = useMemo(() => calculateRTP(stats), [stats]);
+  const rtpCategory = useMemo(() => getRTPCategory(rtpData.rtp), [rtpData.rtp]);
+
+  // Compare to expected RTP
+  const houseEdge = useMemo(() => HouseEdgeCalculator.calculateHouseEdge(state.rules), [state.rules]);
+  const rtpComparison = useMemo(
+    () => compareRTPToExpected(rtpData.rtp, houseEdge),
+    [rtpData.rtp, houseEdge]
+  );
 
   return (
     <div style={{ position: 'relative', minWidth: '200px' }}>
@@ -50,6 +63,40 @@ export function StatsPanel() {
         }}
       >
         <h3 style={{ color: '#8b5cf6', margin: '0 0 12px 0' }}>{t('stats:sessionStatistics')}</h3>
+
+        {/* RTP Highlight Section */}
+        {stats.handsPlayed > 0 && (
+          <div style={{
+            marginBottom: '16px',
+            padding: '12px',
+            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+            border: `2px solid ${rtpCategory.color}`,
+            borderRadius: '8px',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <div style={{ color: '#94a3b8', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                {t('stats:rtp')}
+              </div>
+              <div style={{ color: rtpCategory.color, fontSize: '11px' }}>
+                {t(`stats:rtpCategory.${rtpCategory.category}`)}
+              </div>
+            </div>
+            <div style={{ fontSize: '28px', fontWeight: 'bold', color: rtpCategory.color, marginBottom: '4px' }}>
+              {rtpData.rtp.toFixed(2)}%
+            </div>
+            <div style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '8px' }}>
+              {t('stats:expected')}: {(100 - houseEdge).toFixed(2)}%
+              {rtpComparison.difference !== 0 && (
+                <span style={{ color: rtpComparison.performance === 'above' ? '#22c55e' : '#ef4444', marginLeft: '4px' }}>
+                  ({rtpComparison.difference > 0 ? '+' : ''}{rtpComparison.difference.toFixed(2)}%)
+                </span>
+              )}
+            </div>
+            <div style={{ fontSize: '11px', color: '#64748b', fontStyle: 'italic' }}>
+              {t(`stats:rtpPerformance.${rtpComparison.performance}`)}
+            </div>
+          </div>
+        )}
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '14px' }}>
         <div>

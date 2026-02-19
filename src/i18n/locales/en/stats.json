@@ -11,5 +11,20 @@
   "netProfit": "Net Profit",
   "avgBet": "Avg Bet",
   "showStats": "Show Stats",
-  "hideStats": "Hide"
+  "hideStats": "Hide",
+  "rtp": "Return to Player (RTP)",
+  "expected": "Expected",
+  "rtpCategory": {
+    "excellent": "Excellent",
+    "good": "Good Play",
+    "average": "Average",
+    "poor": "Poor Play",
+    "unknown": "No Data"
+  },
+  "rtpPerformance": {
+    "above": "Playing better than expected",
+    "expected": "Playing as expected",
+    "below": "Playing worse than expected"
+  },
+  "stats": "Statistics"
 }

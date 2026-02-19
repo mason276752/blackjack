@@ -13,6 +13,7 @@
   "avgBetSize": "Avg Bet Size",
   "errorDetected": "Error Detected",
   "retry": "Retry",
+  "waitingForDecision": "Waiting for next decision...",
 
   "reasoning": {
     "bet": {

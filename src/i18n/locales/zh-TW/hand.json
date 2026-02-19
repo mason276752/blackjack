@@ -1,5 +1,5 @@
 {
-  "blackjack": "二十一點！",
+  "blackjack": "21點！",
   "bust": "爆牌",
   "win": "贏得 ${{amount}}",
   "lose": "輸了",

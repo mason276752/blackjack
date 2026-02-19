@@ -46,5 +46,7 @@
   "rulesButton": "Rules",
   "panelTitle": "Game Rules",
   "locked": "Rules are locked during gameplay",
-  "unlocked": "Edit rules (clear bet to unlock)"
+  "unlocked": "Edit rules (clear bet to unlock)",
+  "playerAdvantage": "Player Advantage",
+  "houseEdge": "House Edge"
 }

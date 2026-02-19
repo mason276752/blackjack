@@ -7,10 +7,11 @@ import { CountingSystemWarning } from './CountingSystemWarning';
 import { getEffectiveCount, getActiveStrategySet } from '../../context/gameSelectors';
 
 export function CompactCountDisplay() {
-  const { t } = useTranslation('count');
+  const { t, i18n } = useTranslation('count');
   const { state, dispatch } = useGame();
   const [showWarning, setShowWarning] = useState(false);
   const [pendingSystem, setPendingSystem] = useState<CountingSystem | null>(null);
+  const [hoveredSystem, setHoveredSystem] = useState<string | null>(null);
 
   const gameInProgress = state.phase !== 'betting' || state.currentBet > 0;
 
@@ -59,7 +60,133 @@ export function CompactCountDisplay() {
     color: isActive ? 'white' : '#94a3b8',
     cursor: 'pointer',
     transition: 'all 0.2s',
+    position: 'relative',
   });
+
+  const renderSystemButton = (system: CountingSystem, systemId: string) => (
+    <div
+      style={{ position: 'relative', display: 'inline-block' }}
+      onMouseEnter={() => setHoveredSystem(systemId)}
+      onMouseLeave={() => setHoveredSystem(null)}
+    >
+      <button
+        style={getButtonStyle(state.countingSystem.id === systemId)}
+        onClick={() => handleSystemSelect(system)}
+      >
+        {t(`systemName.${systemId}`)}
+      </button>
+
+      {/* Custom Tooltip */}
+      {hoveredSystem === systemId && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 'calc(100% + 8px)',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 1000,
+            padding: '12px 14px',
+            backgroundColor: '#1e293b',
+            border: '1px solid #06b6d4',
+            borderRadius: '8px',
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(6, 182, 212, 0.2)',
+            minWidth: '220px',
+            maxWidth: '280px',
+            fontSize: '11px',
+            lineHeight: '1.5',
+            color: '#e2e8f0',
+            whiteSpace: 'pre-line',
+            textAlign: 'left',
+            pointerEvents: 'none',
+          }}
+        >
+          {/* Arrow */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '-6px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: 0,
+              height: 0,
+              borderLeft: '6px solid transparent',
+              borderRight: '6px solid transparent',
+              borderBottom: '6px solid #06b6d4',
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              top: '-4px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: 0,
+              height: 0,
+              borderLeft: '5px solid transparent',
+              borderRight: '5px solid transparent',
+              borderBottom: '5px solid #1e293b',
+            }}
+          />
+
+          {/* Tooltip Content */}
+          <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#06b6d4', marginBottom: '8px' }}>
+            {t(`systemName.${systemId}`)}
+          </div>
+
+          {/* Card Values Section */}
+          <div style={{
+            backgroundColor: 'rgba(6, 182, 212, 0.1)',
+            padding: '8px 10px',
+            borderRadius: '6px',
+            marginBottom: '8px',
+            border: '1px solid rgba(6, 182, 212, 0.2)'
+          }}>
+            <div style={{ fontSize: '10px', color: '#94a3b8', marginBottom: '4px', fontWeight: '500' }}>
+              {i18n.language === 'zh-TW' ? '牌值計算：' : 'Card Values:'}
+            </div>
+            <div style={{
+              fontSize: '12px',
+              color: '#e2e8f0',
+              fontFamily: 'monospace',
+              lineHeight: '1.6',
+              whiteSpace: 'pre-line'
+            }}>
+              {(() => {
+                const lines = t(`systemDescription.${systemId}`).split('\n');
+                // Find where system characteristics start (non-card-value line)
+                let cardValueLines = [];
+                for (let i = 0; i < lines.length; i++) {
+                  if (lines[i].match(/^[+\-\s]*\d+:/)) {
+                    cardValueLines.push(lines[i]);
+                  } else if (cardValueLines.length > 0) {
+                    // Stop when we hit the first non-card-value line after card values started
+                    break;
+                  }
+                }
+                return cardValueLines.join('\n');
+              })()}
+            </div>
+          </div>
+
+          {/* System Characteristics */}
+          <div style={{ fontSize: '11px', color: '#cbd5e1', lineHeight: '1.5' }}>
+            {(() => {
+              const lines = t(`systemDescription.${systemId}`).split('\n');
+              // Find where system characteristics start
+              let startIdx = 0;
+              for (let i = 0; i < lines.length; i++) {
+                if (!lines[i].match(/^[+\-\s]*\d+:/)) {
+                  startIdx = i;
+                  break;
+                }
+              }
+              return lines.slice(startIdx).join('\n');
+            })()}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <>
@@ -80,36 +207,11 @@ export function CompactCountDisplay() {
             flexWrap: 'wrap',
           }}
         >
-          <button
-            style={getButtonStyle(state.countingSystem.id === 'hi-lo')}
-            onClick={() => handleSystemSelect(HI_LO)}
-          >
-            {t('systemName.hi-lo')}
-          </button>
-          <button
-            style={getButtonStyle(state.countingSystem.id === 'ko')}
-            onClick={() => handleSystemSelect(KO)}
-          >
-            {t('systemName.ko')}
-          </button>
-          <button
-            style={getButtonStyle(state.countingSystem.id === 'omega-ii')}
-            onClick={() => handleSystemSelect(OMEGA_II)}
-          >
-            {t('systemName.omega-ii')}
-          </button>
-          <button
-            style={getButtonStyle(state.countingSystem.id === 'zen')}
-            onClick={() => handleSystemSelect(ZEN_COUNT)}
-          >
-            {t('systemName.zen')}
-          </button>
-          <button
-            style={getButtonStyle(state.countingSystem.id === 'cac2')}
-            onClick={() => handleSystemSelect(CAC2)}
-          >
-            {t('systemName.cac2')}
-          </button>
+          {renderSystemButton(HI_LO, 'hi-lo')}
+          {renderSystemButton(KO, 'ko')}
+          {renderSystemButton(OMEGA_II, 'omega-ii')}
+          {renderSystemButton(ZEN_COUNT, 'zen')}
+          {renderSystemButton(CAC2, 'cac2')}
         </div>
 
         {/* Count Display - Compact Layout */}

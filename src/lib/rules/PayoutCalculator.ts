@@ -90,6 +90,8 @@ export class PayoutCalculator {
   static calculateInsurancePayout(insuranceBet: number, dealerBlackjack: boolean): number {
     // Insurance pays 2:1
     // Player-unfavorable rounding: round DOWN payouts to player
+    // insuranceBet of -1 means declined, treat as 0
+    if (insuranceBet <= 0) return 0;
     return dealerBlackjack ? Math.floor(insuranceBet * 3) : 0; // Return bet + 2x winnings
   }
 }

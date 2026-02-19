@@ -99,13 +99,6 @@ export function StrategyPanel() {
     return null;
   }, [state.phase, state.activeHandIndex, state.hands, state.dealerHand]);
 
-  // Auto-switch to the correct tab when highlighting changes
-  React.useEffect(() => {
-    if (highlightedCell) {
-      setActiveTab(highlightedCell.tableType);
-    }
-  }, [highlightedCell]);
-
   const containerStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
@@ -174,9 +167,30 @@ export function StrategyPanel() {
       <div style={headerStyle}>
         <div style={titleStyle}>{t('title', 'Basic Strategy')}</div>
         <div style={rulesInfoStyle}>
-          {state.rules.dealerHitsSoft17 ? 'H17' : 'S17'} |
-          {state.rules.doubleAfterSplit ? ' DAS' : ' No DAS'} |
-          {` ${state.rules.deckCount}D`}
+          <div style={{ marginBottom: '4px' }}>
+            {/* Primary rules affecting strategy table */}
+            <span style={{ fontWeight: 'bold', color: '#fbbf24' }}>
+              {state.rules.dealerHitsSoft17 ? 'H17' : 'S17'}
+            </span>
+            {' | '}
+            {state.rules.doubleAfterSplit ? 'DAS' : <span style={{ color: '#ef4444' }}>No DAS</span>}
+            {' | '}
+            {state.rules.deckCount}D
+            {state.rules.lateSurrender && (
+              <>
+                {' | '}
+                <span style={{ color: '#22c55e' }}>LS</span>
+              </>
+            )}
+          </div>
+          <div style={{ fontSize: '10px', color: '#64748b', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {/* Secondary rules affecting gameplay */}
+            <span>BJ: {state.rules.blackjackPayout === 1.5 ? '3:2' : state.rules.blackjackPayout === 1.2 ? '6:5' : `${state.rules.blackjackPayout}:1`}</span>
+            <span>Double: {state.rules.doubleOn === 'any' ? 'Any' : state.rules.doubleOn === '9-11' ? '9-11' : '10-11'}</span>
+            {state.rules.canResplitAces && <span style={{ color: '#22c55e' }}>RSA</span>}
+            {state.rules.canHitSplitAces && <span style={{ color: '#22c55e' }}>HSA</span>}
+            <span>Max Splits: {state.rules.maxSplits}</span>
+          </div>
         </div>
       </div>
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAIPlayer } from '../../hooks/useAIPlayer';
 
@@ -145,27 +144,40 @@ export function AIControlPanel() {
         </div>
       )}
 
-      {/* Current Decision Display */}
-      {aiState.isEnabled && aiState.currentDecision && (
+      {/* Current Decision Display - Always reserve space */}
+      {aiState.isEnabled && (
         <div
           style={{
-            backgroundColor: 'rgba(139, 92, 246, 0.1)',
-            border: '1px solid rgba(139, 92, 246, 0.3)',
+            backgroundColor: aiState.currentDecision ? 'rgba(139, 92, 246, 0.1)' : 'rgba(55, 65, 81, 0.05)',
+            border: `1px solid ${aiState.currentDecision ? 'rgba(139, 92, 246, 0.3)' : 'rgba(55, 65, 81, 0.2)'}`,
             borderRadius: '8px',
             padding: '12px',
             marginBottom: '16px',
+            minHeight: '80px',
+            transition: 'all 0.3s ease',
           }}
         >
-          <div style={{ fontSize: '12px', color: '#8b5cf6', fontWeight: 'bold', marginBottom: '6px' }}>
+          <div style={{
+            fontSize: '12px',
+            color: aiState.currentDecision ? '#8b5cf6' : '#64748b',
+            fontWeight: 'bold',
+            marginBottom: '6px'
+          }}>
             💡 {t('currentDecision')}
           </div>
-          <div style={{ fontSize: '14px', color: 'white', lineHeight: '1.5' }}>
-            <strong style={{ color: '#fbbf24' }}>
-              {aiState.currentDecision.action.toUpperCase()}
-            </strong>
-            <br />
-            {aiState.currentDecision.reasoning}
-          </div>
+          {aiState.currentDecision ? (
+            <div style={{ fontSize: '14px', color: 'white', lineHeight: '1.5' }}>
+              <strong style={{ color: '#fbbf24' }}>
+                {aiState.currentDecision.action.toUpperCase()}
+              </strong>
+              <br />
+              {aiState.currentDecision.reasoning}
+            </div>
+          ) : (
+            <div style={{ fontSize: '13px', color: '#64748b', fontStyle: 'italic', lineHeight: '1.5' }}>
+              {t('waitingForDecision')}
+            </div>
+          )}
         </div>
       )}
 

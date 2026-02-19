@@ -1,19 +1,19 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGame } from '../../context/GameContext';
-import { useGameLogic } from '../../hooks/useGameLogic';
 import { useAIPlayer } from '../../hooks/useAIPlayer';
 import { theme, textStyles, getChipColor, getOpacity, getCursor } from '../../styles';
-import { Button } from '../common/Button';
 
 const CHIP_VALUES = [25, 50, 100, 250, 500];
 
-export function BettingControls() {
+interface BettingControlsProps {
+  selectedChip: number;
+  onChipSelect: (value: number) => void;
+}
+
+export function BettingControls({ selectedChip, onChipSelect }: BettingControlsProps) {
   const { t } = useTranslation(['betting', 'common']);
   const { state, dispatch } = useGame();
-  const { dealCards } = useGameLogic();
   const { aiState } = useAIPlayer();
-  const [selectedChip, setSelectedChip] = useState(25);
 
   // Disable all betting controls when AI is playing
   const isAIPlaying = aiState.isEnabled && aiState.isPlaying;
@@ -22,10 +22,6 @@ export function BettingControls() {
     if (state.balance >= amount) {
       dispatch({ type: 'PLACE_BET', amount: state.currentBet + amount });
     }
-  };
-
-  const clearBet = () => {
-    dispatch({ type: 'CLEAR_BET' });
   };
 
   const chipStyle = (value: number) => ({
@@ -49,10 +45,16 @@ export function BettingControls() {
     opacity: getOpacity(isAIPlaying),
   });
 
-  if (state.phase !== 'betting') return null;
+  // Only render when in betting phase - no reserved space
+  if (state.phase !== 'betting') {
+    return null;
+  }
 
   return (
-    <div style={{ textAlign: 'center', padding: theme.spacing.lg }}>
+    <div style={{
+      textAlign: 'center',
+      padding: theme.spacing.lg,
+    }}>
       <div style={{ marginBottom: theme.spacing.md }}>
         <h3 style={{
           ...textStyles.heading.h3,
@@ -68,7 +70,7 @@ export function BettingControls() {
               style={chipStyle(value)}
               onClick={() => {
                 if (!isAIPlaying) {
-                  setSelectedChip(value);
+                  onChipSelect(value);
                   addBet(value);
                 }
               }}
@@ -90,25 +92,6 @@ export function BettingControls() {
             fontWeight: theme.typography.fontWeight.bold,
           }}>${state.currentBet}</span>
         </div>
-      </div>
-
-      <div style={{ display: 'flex', gap: theme.spacing.sm, justifyContent: 'center' }}>
-        <Button
-          variant="success"
-          size="md"
-          disabled={state.currentBet === 0 || isAIPlaying}
-          onClick={dealCards}
-        >
-          {t('common:dealCards')}
-        </Button>
-        <Button
-          variant="danger"
-          size="md"
-          disabled={state.currentBet === 0 || isAIPlaying}
-          onClick={clearBet}
-        >
-          {t('common:clearBet')}
-        </Button>
       </div>
     </div>
   );

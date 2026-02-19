@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGame } from '../../context/GameContext';
 import { GameRules } from '../../types/game.types';
@@ -6,6 +6,7 @@ import { VEGAS_STRIP_RULES, SINGLE_DECK_RULES, ATLANTIC_CITY_RULES } from '../..
 import { PresetSelector, PresetType } from './PresetSelector';
 import { CustomRulesForm } from './CustomRulesForm';
 import { ConfirmModal } from './ConfirmModal';
+import { HouseEdgeCalculator } from '../../lib/strategy/HouseEdgeCalculator';
 
 export function RulesPanel() {
   const { t } = useTranslation('rules');
@@ -93,6 +94,15 @@ export function RulesPanel() {
     setShowConfirm(false);
   };
 
+  // Calculate player advantage based on current rules
+  const playerAdvantage = useMemo(() => {
+    return HouseEdgeCalculator.getPlayerAdvantage(customRules);
+  }, [customRules]);
+
+  const houseEdge = useMemo(() => {
+    return HouseEdgeCalculator.calculateHouseEdge(customRules);
+  }, [customRules]);
+
   const containerStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
@@ -134,7 +144,7 @@ export function RulesPanel() {
     <>
       <div style={containerStyle}>
         <div style={headerStyle}>
-          <div>
+          <div style={{ flex: 1 }}>
             <div style={titleStyle}>
               {isLocked && <span style={lockIconStyle}>🔒</span>}
               {t('panelTitle', 'Game Rules')}
@@ -144,6 +154,43 @@ export function RulesPanel() {
                 {t('locked', 'Rules are locked during gameplay')}
               </div>
             )}
+          </div>
+
+          {/* Player Advantage Display */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            gap: '4px'
+          }}>
+            <div style={{
+              fontSize: '11px',
+              color: '#94a3b8',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px'
+            }}>
+              {t('playerAdvantage', 'Player Advantage')}
+            </div>
+            <div style={{
+              fontSize: '20px',
+              fontWeight: 'bold',
+              color: playerAdvantage >= 0 ? '#22c55e' : '#ef4444',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}>
+              {playerAdvantage >= 0 ? '+' : ''}{playerAdvantage.toFixed(2)}%
+              <span style={{ fontSize: '14px' }}>
+                {playerAdvantage >= 0 ? '📈' : '📉'}
+              </span>
+            </div>
+            <div style={{
+              fontSize: '10px',
+              color: '#64748b',
+              fontStyle: 'italic'
+            }}>
+              {t('houseEdge', 'House Edge')}: {houseEdge >= 0 ? '+' : ''}{houseEdge.toFixed(2)}%
+            </div>
           </div>
         </div>
 

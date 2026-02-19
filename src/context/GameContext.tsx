@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useReducer, useMemo, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, useMemo, useEffect, ReactNode } from 'react';
 import { GameState } from '../types/game.types';
 import { GameAction } from './gameActions';
 import { gameReducer, createInitialState } from './gameReducer';
 import { Shoe } from '../lib/deck/Shoe';
 import { DealerAI } from '../lib/dealer/DealerAI';
 import { BasicStrategy } from '../lib/strategy/BasicStrategy';
+import { saveGameState, loadGameState } from '../lib/storage/gameStorage';
 
 interface GameContextValue {
   state: GameState;
@@ -17,7 +18,24 @@ interface GameContextValue {
 const GameContext = createContext<GameContextValue | undefined>(undefined);
 
 export function GameProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(gameReducer, createInitialState());
+  // Initialize state with saved data or defaults
+  const [state, dispatch] = useReducer(gameReducer, createInitialState(), (initial) => {
+    const savedData = loadGameState();
+    if (savedData) {
+      console.log('[GameContext] Loaded saved game state from localStorage');
+      return {
+        ...initial,
+        rules: savedData.rules,
+        balance: savedData.balance,
+        statistics: {
+          ...savedData.statistics,
+          currentBalance: savedData.balance,
+        },
+        countingSystem: savedData.countingSystem,
+      };
+    }
+    return initial;
+  });
 
   // Create instances that depend on state.rules
   const shoe = useMemo(
@@ -34,6 +52,21 @@ export function GameProvider({ children }: { children: ReactNode }) {
     () => new BasicStrategy(state.rules),
     [state.rules]
   );
+
+  // Auto-save game state to localStorage whenever it changes
+  useEffect(() => {
+    // Don't save during initial mount
+    if (state.statistics.handsPlayed === 0 && state.balance === state.statistics.startingBalance) {
+      return;
+    }
+
+    // Save to localStorage with debounce
+    const timeoutId = setTimeout(() => {
+      saveGameState(state);
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [state.balance, state.rules, state.statistics, state.countingSystem]);
 
   const value = useMemo(
     () => ({ state, dispatch, shoe, dealerAI, strategy }),

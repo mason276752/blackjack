@@ -4,12 +4,27 @@
   "winRate": "勝率",
   "handsWon": "獲勝局數",
   "handsLost": "失敗局數",
-  "blackjacks": "二十一點數",
+  "blackjacks": "21點數",
   "busts": "爆牌數",
   "totalWagered": "總下注",
   "totalWon": "總贏得",
   "netProfit": "淨利潤",
   "avgBet": "平均注額",
   "showStats": "顯示統計",
-  "hideStats": "隱藏"
+  "hideStats": "隱藏",
+  "rtp": "玩家報酬率 (RTP)",
+  "expected": "預期",
+  "rtpCategory": {
+    "excellent": "優秀",
+    "good": "良好表現",
+    "average": "中等",
+    "poor": "表現不佳",
+    "unknown": "無資料"
+  },
+  "rtpPerformance": {
+    "above": "表現優於預期",
+    "expected": "符合預期表現",
+    "below": "表現低於預期"
+  },
+  "stats": "統計"
 }

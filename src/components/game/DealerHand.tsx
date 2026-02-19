@@ -23,7 +23,7 @@ export const DealerHand = memo(function DealerHand({ cards, hideHoleCard }: Deal
         borderRadius: '8px',
         padding: '16px',
         backgroundColor: 'rgba(0, 0, 0, 0.3)',
-        minWidth: '300px',
+        minWidth: '200px',
       }}
     >
       <div style={{ marginBottom: '8px' }}>

@@ -79,61 +79,53 @@ export const ActionButtons = memo(function ActionButtons() {
     return true;
   }, [isAIPlaying, state.phase, currentHand, state.hands.length, state.rules]);
 
-  if (state.phase !== 'player_turn') return null;
-
+  // Render buttons directly without wrapper for inline display
   return (
-    <div style={{
-      display: 'flex',
-      flexWrap: 'wrap',
-      gap: theme.spacing.sm,
-      justifyContent: 'center',
-      marginTop: theme.spacing.md,
-    }}>
-      <Button
-        variant="primary"
-        size="md"
-        disabled={!canHit}
-        onClick={hit}
-        style={{ margin: theme.spacing.xs }}
-      >
-        {t('hit')}
-      </Button>
-      <Button
-        variant="primary"
-        size="md"
-        disabled={!canStand}
-        onClick={stand}
-        style={{ margin: theme.spacing.xs }}
-      >
-        {t('stand')}
-      </Button>
-      <Button
-        variant="primary"
-        size="md"
-        disabled={!canDouble}
-        onClick={doubleDown}
-        style={{ margin: theme.spacing.xs }}
-      >
-        {t('double')}
-      </Button>
-      <Button
-        variant="primary"
-        size="md"
-        disabled={!canSplit}
-        onClick={split}
-        style={{ margin: theme.spacing.xs }}
-      >
-        {t('split')}
-      </Button>
-      <Button
-        variant="primary"
-        size="md"
-        disabled={!canSurrender}
-        onClick={surrender}
-        style={{ margin: theme.spacing.xs }}
-      >
-        {t('surrender')}
-      </Button>
-    </div>
+    <>
+      {state.phase === 'player_turn' && (
+        <>
+          <Button
+            variant="primary"
+            size="md"
+            disabled={!canHit}
+            onClick={hit}
+          >
+            {t('hit')}
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            disabled={!canStand}
+            onClick={stand}
+          >
+            {t('stand')}
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            disabled={!canDouble}
+            onClick={doubleDown}
+          >
+            {t('double')}
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            disabled={!canSplit}
+            onClick={split}
+          >
+            {t('split')}
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            disabled={!canSurrender}
+            onClick={surrender}
+          >
+            {t('surrender')}
+          </Button>
+        </>
+      )}
+    </>
   );
 });

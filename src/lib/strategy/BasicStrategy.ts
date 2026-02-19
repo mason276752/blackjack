@@ -29,13 +29,39 @@ export class BasicStrategy {
       // H17 rules
       this.hardHandStrategy = HARD_HAND_STRATEGY_H17_DAS;
       this.softHandStrategy = SOFT_HAND_STRATEGY_H17_DAS;
-      this.pairStrategy = PAIR_STRATEGY_H17_DAS;
+      this.pairStrategy = { ...PAIR_STRATEGY_H17_DAS };
     } else {
       // S17 rules
       this.hardHandStrategy = HARD_HAND_STRATEGY_S17_DAS;
       this.softHandStrategy = SOFT_HAND_STRATEGY_S17_DAS;
-      this.pairStrategy = PAIR_STRATEGY_S17_DAS;
+      this.pairStrategy = { ...PAIR_STRATEGY_S17_DAS };
     }
+
+    // Adjust pair strategy for No DAS
+    if (!rules.doubleAfterSplit) {
+      this.adjustPairStrategyForNoDAS();
+    }
+  }
+
+  /**
+   * Adjust pair splitting strategy when DAS is not allowed
+   * Without DAS, we split less aggressively on small pairs
+   */
+  private adjustPairStrategyForNoDAS(): void {
+    // 2,2: Split 4-7 instead of 2-7
+    this.pairStrategy['2_vs_2'] = 'H';
+    this.pairStrategy['2_vs_3'] = 'H';
+
+    // 3,3: Split 4-7 instead of 2-7
+    this.pairStrategy['3_vs_2'] = 'H';
+    this.pairStrategy['3_vs_3'] = 'H';
+
+    // 4,4: Never split without DAS
+    this.pairStrategy['4_vs_5'] = 'H';
+    this.pairStrategy['4_vs_6'] = 'H';
+
+    // 6,6: Split 2-6 instead of 2-7
+    this.pairStrategy['6_vs_7'] = 'H';
   }
 
   getOptimalAction(

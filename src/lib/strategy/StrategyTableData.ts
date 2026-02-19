@@ -31,11 +31,12 @@ function getHardHandStrategyTable(rules?: GameRules): Record<string, StrategyAct
     return HARD_HAND_STRATEGY; // Default fallback
   }
 
-  // Select strategy based on H17/S17 and DAS
+  // Select strategy based on H17/S17
+  // Note: Hard hand strategy is not affected by DAS (only pair strategy is)
   if (rules.dealerHitsSoft17) {
-    return HARD_HAND_STRATEGY_H17_DAS; // H17 with DAS
+    return HARD_HAND_STRATEGY_H17_DAS; // H17
   } else {
-    return HARD_HAND_STRATEGY_S17_DAS; // S17 with DAS
+    return HARD_HAND_STRATEGY_S17_DAS; // S17
   }
 }
 
@@ -56,11 +57,34 @@ function getPairStrategyTable(rules?: GameRules): Record<string, StrategyAction>
     return PAIR_STRATEGY; // Default fallback
   }
 
+  // Get base pair strategy based on H17/S17
+  let baseStrategy: Record<string, StrategyAction>;
   if (rules.dealerHitsSoft17) {
-    return PAIR_STRATEGY_H17_DAS;
+    baseStrategy = { ...PAIR_STRATEGY_H17_DAS };
   } else {
-    return PAIR_STRATEGY_S17_DAS;
+    baseStrategy = { ...PAIR_STRATEGY_S17_DAS };
   }
+
+  // Adjust for No DAS if needed
+  if (!rules.doubleAfterSplit) {
+    // Without DAS, be more conservative with small pairs
+    // 2,2: Split 4-7 instead of 2-7
+    baseStrategy['2_vs_2'] = 'H';
+    baseStrategy['2_vs_3'] = 'H';
+
+    // 3,3: Split 4-7 instead of 2-7
+    baseStrategy['3_vs_2'] = 'H';
+    baseStrategy['3_vs_3'] = 'H';
+
+    // 4,4: Never split without DAS (hit 5-6, else hit)
+    baseStrategy['4_vs_5'] = 'H';
+    baseStrategy['4_vs_6'] = 'H';
+
+    // 6,6: Split 2-6 instead of 2-7
+    baseStrategy['6_vs_7'] = 'H';
+  }
+
+  return baseStrategy;
 }
 
 /**

@@ -15,6 +15,13 @@
     "zen": "Zen",
     "cac2": "CAC2"
   },
+  "systemDescription": {
+    "hi-lo": "+1: 2, 3, 4, 5, 6\n 0: 7, 8, 9\n-1: 10, J, Q, K, A\n平衡系統，簡單易學，最適合初學者",
+    "ko": "+1: 2, 3, 4, 5, 6, 7\n 0: 8, 9\n-1: 10, J, Q, K, A\n不平衡系統，無需轉換真實計數",
+    "omega-ii": "+2: 4, 5, 6\n+1: 2, 3, 7\n 0: 8, A\n-1: 9\n-2: 10, J, Q, K\nLevel 2 系統，更高準確度",
+    "zen": "+2: 4, 5, 6\n+1: 2, 3, 7\n 0: 8, 9\n-1: A\n-2: 10, J, Q, K\n平衡系統，精確度高",
+    "cac2": "+2: 3, 4, 5\n+1: 2, 6, 7\n 0: 8, 9\n-1: A\n-2: 10, J, Q, K\nLevel 2 系統，22 個策略偏差"
+  },
   "strategyName": {
     "illustrious18": "Illustrious 18",
     "ko_preferred": "KO Preferred",

@@ -16,7 +16,7 @@
   "dealerRule": "莊家規則",
   "dealerS17": "軟17停牌 (S17)",
   "dealerH17": "軟17要牌 (H17)",
-  "blackjackPayout": "二十一點賠率",
+  "blackjackPayout": "21點賠率",
   "payout3to2": "3:2 (150%)",
   "payout6to5": "6:5 (120%)",
   "penetration": "發牌深度",
@@ -46,5 +46,7 @@
   "rulesButton": "規則",
   "panelTitle": "遊戲規則",
   "locked": "遊戲進行中無法更改規則",
-  "unlocked": "編輯規則（清除下注以解鎖）"
+  "unlocked": "編輯規則（清除下注以解鎖）",
+  "playerAdvantage": "玩家優勢",
+  "houseEdge": "莊家優勢"
 }

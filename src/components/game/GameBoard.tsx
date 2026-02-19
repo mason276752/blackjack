@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGame } from '../../context/GameContext';
 import { useGameLogic } from '../../hooks/useGameLogic';
@@ -23,8 +23,9 @@ import { theme } from '../../styles';
 export function GameBoard() {
   const { t } = useTranslation(['common', 'game']);
   const { state, dispatch } = useGame();
-  const { playDealerHand, newRound } = useGameLogic();
+  const { playDealerHand, newRound, dealCards } = useGameLogic();
   const dealerPlayingRef = useRef(false);
+  const [selectedChip, setSelectedChip] = useState(25);
 
   // Auto-play dealer turn (防止雙重執行)
   useEffect(() => {
@@ -87,30 +88,45 @@ export function GameBoard() {
         rightPanel={<RulesPanel />}
       >
         <ErrorBoundary>
-          {/* Dealer Area */}
-        {state.dealerHand.length > 0 && (
-          <div style={{ marginBottom: theme.spacing['2xl'], display: 'flex', justifyContent: 'center' }}>
-            <DealerHand cards={state.dealerHand} hideHoleCard={state.dealerHoleCardHidden} />
+          {/* Main Game Area - Fixed height container */}
+          <div style={{
+            height: '600px',
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            {/* Dealer Area */}
+            {state.dealerHand.length > 0 && (
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <DealerHand cards={state.dealerHand} hideHoleCard={state.dealerHoleCardHidden} />
+              </div>
+            )}
+
+            {/* Strategy Hint */}
+            <StrategyHint />
+
+            {/* Player Hands */}
+            {state.hands.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+                {state.hands.map((hand, index) => (
+                  <PlayerHand
+                    key={hand.id}
+                    hand={hand}
+                    isActive={index === state.activeHandIndex && state.phase === 'player_turn'}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Betting Controls - Chip selection - Fills remaining space */}
+            {state.phase === 'betting' && (
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <BettingControls selectedChip={selectedChip} onChipSelect={setSelectedChip} />
+              </div>
+            )}
           </div>
-        )}
 
-        {/* Strategy Hint */}
-        <StrategyHint />
-
-        {/* Player Hands */}
-        {state.hands.length > 0 && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', marginBottom: theme.spacing.lg }}>
-            {state.hands.map((hand, index) => (
-              <PlayerHand
-                key={hand.id}
-                hand={hand}
-                isActive={index === state.activeHandIndex && state.phase === 'player_turn'}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Message Display */}
+        {/* Message Display - Fixed height */}
         <div
           style={{
             textAlign: 'center',
@@ -118,7 +134,10 @@ export function GameBoard() {
             fontWeight: theme.typography.fontWeight.bold,
             color: theme.colors.warning,
             marginBottom: theme.spacing.lg,
-            minHeight: '30px',
+            minHeight: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           {state.message ? (
@@ -131,24 +150,42 @@ export function GameBoard() {
         {/* Insurance Controls (Modal) */}
         <InsuranceControls />
 
-        {/* Action Buttons */}
-        <ActionButtons />
+        {/* Unified Action & Control Buttons - All buttons in one row */}
+        <div style={{ textAlign: 'center', marginTop: theme.spacing.lg, minHeight: '60px' }}>
+          <div style={{ display: 'flex', gap: theme.spacing.sm, justifyContent: 'center', flexWrap: 'wrap' }}>
+            {/* Action Buttons */}
+            <ActionButtons />
 
-        {/* Betting Controls */}
-        <BettingControls />
-
-        {/* New Round Button */}
-        {state.phase === 'resolution' && (
-          <div style={{ textAlign: 'center', marginTop: theme.spacing.lg }}>
-            <Button
-              variant="success"
-              size="lg"
-              onClick={newRound}
-            >
-              {t('common:newRound')}
-            </Button>
+            {/* Control Buttons - Conditionally rendered based on phase */}
+            {state.phase === 'betting' && state.currentBet > 0 && (
+              <>
+                <Button
+                  variant="success"
+                  size="md"
+                  onClick={dealCards}
+                >
+                  {t('common:dealCards')}
+                </Button>
+                <Button
+                  variant="danger"
+                  size="md"
+                  onClick={() => dispatch({ type: 'CLEAR_BET' })}
+                >
+                  {t('common:clearBet')}
+                </Button>
+              </>
+            )}
+            {state.phase === 'resolution' && (
+              <Button
+                variant="success"
+                size="md"
+                onClick={newRound}
+              >
+                {t('common:newRound')}
+              </Button>
+            )}
           </div>
-        )}
+        </div>
 
         {/* AI Control Panel */}
         <AIControlPanel />

@@ -11,7 +11,7 @@ export function InsuranceControls() {
   // 1. Game is in player_turn phase
   // 2. Dealer's up card is Ace
   // 3. Insurance is allowed by rules
-  // 4. Insurance hasn't been decided yet
+  // 4. Insurance hasn't been decided yet (0 = not decided, -1 = declined, >0 = taken)
   // 5. No split hands yet (insurance offered before splits)
   const shouldShowInsurance =
     state.phase === 'player_turn' &&

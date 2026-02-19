@@ -13,6 +13,7 @@ export function createInitialState(): GameState {
     penetrationReached: false,
     balance: DEFAULT_STARTING_BALANCE,
     currentBet: 0,
+    lastBet: 0,
     hands: [],
     activeHandIndex: 0,
     insuranceBet: 0,
@@ -104,6 +105,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         dealerValue,
         dealerHoleCardHidden: true,
         balance: state.balance - state.currentBet,
+        lastBet: state.currentBet, // Remember this bet for next round
         activeHandIndex: 0,
         message: HandEvaluator.isBlackjack(action.playerCards) ? 'blackjack' : 'yourTurn',
         statistics: {
@@ -130,7 +132,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case 'DECLINE_INSURANCE':
       return {
         ...state,
-        insuranceBet: 0,
+        insuranceBet: -1, // -1 indicates insurance was declined
         message: 'insuranceDeclined',
       };
 
@@ -579,7 +581,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         dealerHand: [],
         dealerValue: 0,
         dealerHoleCardHidden: false,
-        currentBet: 0,
+        currentBet: state.lastBet, // Restore previous bet amount
         activeHandIndex: 0,
         insuranceBet: 0,
         message: 'placeNextBet',

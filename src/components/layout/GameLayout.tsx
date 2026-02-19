@@ -17,10 +17,10 @@ export function GameLayout({ leftPanel, rightPanel, children }: GameLayoutProps)
   if (breakpoint === 'desktop') {
     const layoutStyle: React.CSSProperties = {
       display: 'grid',
-      gridTemplateColumns: '400px 1fr 400px',
+      gridTemplateColumns: '520px 1fr 400px',
       gridTemplateRows: '1fr',
       gap: '20px',
-      maxWidth: '1800px',
+      maxWidth: '1940px',
       margin: '0 auto',
       padding: '0 20px',
       alignItems: 'start',
@@ -37,7 +37,6 @@ export function GameLayout({ leftPanel, rightPanel, children }: GameLayoutProps)
 
     const centerStyle: React.CSSProperties = {
       minWidth: '600px',
-      maxWidth: '800px',
     };
 
     return (
@@ -64,7 +63,6 @@ export function GameLayout({ leftPanel, rightPanel, children }: GameLayoutProps)
     };
 
     const centerStyle: React.CSSProperties = {
-      maxWidth: '800px',
       margin: '0 auto',
       width: '100%',
     };
