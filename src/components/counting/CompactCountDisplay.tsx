@@ -196,6 +196,8 @@ export function CompactCountDisplay() {
           flexDirection: 'column',
           gap: '8px',
           minWidth: '240px',
+          maxWidth: '320px',
+          width: '100%',
         }}
       >
         {/* System Selector - Horizontal Button Group */}

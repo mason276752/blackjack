@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card as CardType } from '../../types/card.types';
 import { useCardSprite } from '../../hooks/useCardSprite';
@@ -10,10 +10,13 @@ interface CardProps {
   className?: string;
 }
 
-export function Card({ card, faceDown = false, className = '' }: CardProps) {
+export const Card = React.memo(function Card({ card, faceDown = false, className = '' }: CardProps) {
   const { t } = useTranslation('game');
-  const [showTooltip, setShowTooltip] = useState(false);
   const position = useCardSprite(card, faceDown);
+
+  // Get tooltip content
+  const tooltipContent = (card && !faceDown) ? t(`cardValue.${card.rank}`) : '';
+  const cardLabel = card ? `${card.rank} ${card.suit}` : '';
 
   const style: React.CSSProperties = {
     width: `${DISPLAY_CARD_WIDTH}px`,
@@ -32,18 +35,17 @@ export function Card({ card, faceDown = false, className = '' }: CardProps) {
   };
 
   const label = faceDown || !card ? 'Hidden card' : `${card.rank} of ${card.suit}`;
-  const cardValue = card && !faceDown ? t(`cardValue.${card.rank}`) : '';
 
   return (
     <div
       className={`card ${className}`}
       style={style}
       aria-label={label}
-      onMouseEnter={() => !faceDown && card && setShowTooltip(true)}
-      onMouseLeave={() => setShowTooltip(false)}
+      title={tooltipContent || undefined}
     >
-      {showTooltip && card && !faceDown && (
+      {card && !faceDown && (
         <div
+          className="card-tooltip"
           style={{
             position: 'absolute',
             bottom: '100%',
@@ -61,12 +63,15 @@ export function Card({ card, faceDown = false, className = '' }: CardProps) {
             whiteSpace: 'nowrap',
             zIndex: 1000,
             pointerEvents: 'none',
+            opacity: 0,
+            visibility: 'hidden',
+            transition: 'opacity 0.2s, visibility 0.2s',
           }}
         >
           <div style={{ fontWeight: 'bold', marginBottom: '2px', color: '#c084fc' }}>
-            {card.rank} {card.suit}
+            {cardLabel}
           </div>
-          <div style={{ fontSize: '12px', color: '#94a3b8' }}>{cardValue}</div>
+          <div style={{ fontSize: '12px', color: '#94a3b8' }}>{tooltipContent}</div>
           {/* Tooltip arrow */}
           <div
             style={{
@@ -83,6 +88,12 @@ export function Card({ card, faceDown = false, className = '' }: CardProps) {
           />
         </div>
       )}
+      <style>{`
+        .card:hover .card-tooltip {
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+      `}</style>
     </div>
   );
-}
+});

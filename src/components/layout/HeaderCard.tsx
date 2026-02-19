@@ -18,11 +18,13 @@ export function HeaderCard({ countingContent, titleContent, controlsContent }: H
     alignItems: 'center',
     gap: '24px',
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+    flexWrap: 'wrap',
   };
 
   const leftSectionStyle: React.CSSProperties = {
     flex: '0 0 auto',
     minWidth: '240px',
+    maxWidth: '320px',
   };
 
   const centerSectionStyle: React.CSSProperties = {
@@ -32,6 +34,7 @@ export function HeaderCard({ countingContent, titleContent, controlsContent }: H
     flexDirection: 'column',
     justifyContent: 'center',
     gap: '6px',
+    minWidth: '200px',
   };
 
   const rightSectionStyle: React.CSSProperties = {
@@ -39,6 +42,8 @@ export function HeaderCard({ countingContent, titleContent, controlsContent }: H
     display: 'flex',
     gap: '10px',
     alignItems: 'center',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-end',
   };
 
   const dividerStyle: React.CSSProperties = {
@@ -54,16 +59,25 @@ export function HeaderCard({ countingContent, titleContent, controlsContent }: H
       <div style={leftSectionStyle}>{countingContent}</div>
 
       {/* Divider */}
-      <div style={dividerStyle} />
+      <div style={dividerStyle} className="header-divider" />
 
       {/* Center Section: Title + Balance */}
       <div style={centerSectionStyle}>{titleContent}</div>
 
       {/* Divider */}
-      <div style={dividerStyle} />
+      <div style={dividerStyle} className="header-divider" />
 
       {/* Right Section: Stats + Language */}
       <div style={rightSectionStyle}>{controlsContent}</div>
+
+      {/* Responsive styles */}
+      <style>{`
+        @media (max-width: 1200px) {
+          .header-divider {
+            display: none;
+          }
+        }
+      `}</style>
     </div>
   );
 }
