@@ -7,7 +7,7 @@
 AI 자동 플레이, 다중 카드 카운팅 시스템, 전략 편차 힌트 및 포괄적인 규칙 커스터마이징을 갖춘 정교한 웹 기반 블랙잭 시뮬레이터입니다. React, TypeScript, Vite로 구축되었습니다.
 
 ## 라이브 데모
-
+<img width="1903" height="905" alt="image" src="https://github.com/user-attachments/assets/b3d2b761-58fa-4161-85db-3ff8de65ba46" />
 🎮 **[지금 플레이](https://mason276752.github.io/blackjack/)**
 
 ## 주요 기능

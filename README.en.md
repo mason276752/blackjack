@@ -7,7 +7,7 @@
 A sophisticated web-based blackjack simulator with AI auto-play, multiple card counting systems, strategy deviation hints, and comprehensive rule customization. Built with React, TypeScript, and Vite.
 
 ## Live Demo
-
+<img width="1903" height="905" alt="image" src="https://github.com/user-attachments/assets/b3d2b761-58fa-4161-85db-3ff8de65ba46" />
 🎮 **[Play Now](https://mason276752.github.io/blackjack/)**
 
 ## Features
