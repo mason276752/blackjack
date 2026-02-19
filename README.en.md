@@ -22,8 +22,7 @@ A sophisticated web-based blackjack simulator with AI auto-play, card counting, 
 - **Multiple Counting Systems**:
   - Hi-Lo (default, balanced system)
   - KO (unbalanced knock-out)
-  - Hi-Opt I & II (advanced systems)
-  - Omega II (multi-level system)
+  - Omega II (advanced multi-level system)
 - **Real-Time Count Tracking**: Running count and true count display with remaining deck calculation
 - **Visual Indicators**: Color-coded count display showing favorable/unfavorable situations
 
@@ -194,34 +193,34 @@ The game implements **player-unfavorable rounding** to match real casino practic
 ## Card Counting Systems
 
 ### Hi-Lo (Recommended for Beginners)
-- Low cards (2-6): +1
-- Neutral (7-9): 0
-- High cards (10-A): -1
-- Balanced system, requires true count conversion
+- **Low cards (2-6)**: +1
+- **Neutral (7-9)**: 0
+- **High cards (10-A)**: -1
+- **Type**: Balanced system, requires true count conversion
+- **Advantages**: Easy to learn, good effectiveness
+- **Betting Correlation**: 0.97
+- **Playing Efficiency**: 0.51
 
 ### KO (Knock-Out)
-- Low cards (2-7): +1
-- Neutral (8-9): 0
-- High cards (10-A): -1
-- Unbalanced system, no true count needed
+- **Low cards (2-7)**: +1
+- **Neutral (8-9)**: 0
+- **High cards (10-A)**: -1
+- **Type**: Unbalanced system, no true count needed
+- **Advantages**: Simpler than Hi-Lo, no need to track remaining decks
+- **Betting Correlation**: 0.98
+- **Playing Efficiency**: 0.55
 
-### Hi-Opt I
-- Low cards (3-6): +1
-- Neutral (2, 7-9, A): 0
-- High cards (10-K): -1
-- Advanced balanced system
-
-### Hi-Opt II
-- Low cards (2, 3, 6, 7): +1
-- Mid cards (4, 5): +2
-- Neutral (8, 9, A): 0
-- High cards (10-K): -2
-- Multi-level balanced system
-
-### Omega II
-- Most complex multi-level system
-- Requires side count of Aces
-- Highest theoretical win rate
+### Omega II (Advanced Multi-Level System)
+- **+2 cards (4, 5)**: +2
+- **+1 cards (2, 3, 7)**: +1
+- **Neutral (8, 9, A)**: 0
+- **-1 card (9)**: -1
+- **-2 cards (10, J, Q, K)**: -2
+- **Type**: Balanced multi-level system
+- **Advantages**: Highest theoretical accuracy
+- **Disadvantages**: More complex, requires more practice
+- **Betting Correlation**: 0.99
+- **Playing Efficiency**: 0.67
 
 ## AI Bet Spreading Strategy
 
@@ -311,7 +310,7 @@ MIT License - See LICENSE file for details
 ### v1.0.0 (Current)
 - ✅ Complete blackjack game implementation
 - ✅ AI auto-play system
-- ✅ 5 card counting systems (Hi-Lo, KO, Hi-Opt I/II, Omega II)
+- ✅ 3 card counting systems (Hi-Lo, KO, Omega II)
 - ✅ Interactive strategy tables
 - ✅ Bilingual support (Traditional Chinese, English)
 - ✅ Insurance feature
