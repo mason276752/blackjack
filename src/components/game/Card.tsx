@@ -15,7 +15,7 @@ export function Card({ card, faceDown = false, className = '' }: CardProps) {
   const style: React.CSSProperties = {
     width: `${DISPLAY_CARD_WIDTH}px`,
     height: `${DISPLAY_CARD_HEIGHT}px`,
-    backgroundImage: 'url(/poker.png)',
+    backgroundImage: `url(${import.meta.env.BASE_URL}poker.png)`,
     backgroundPosition: `-${position.x * 2}px -${position.y * 2}px`,
     backgroundSize: `${SPRITE_SHEET_WIDTH * 2}px ${SPRITE_SHEET_HEIGHT * 2}px`,
     display: 'inline-block',
