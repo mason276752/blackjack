@@ -86,6 +86,6 @@ export const OMEGA_II: CountingSystem = {
   playingEfficiency: 0.67,
 };
 
-export const DEFAULT_STARTING_BALANCE = 1000;
-export const DEFAULT_MIN_BET = 5;
-export const DEFAULT_MAX_BET = 500;
+export const DEFAULT_STARTING_BALANCE = 25000;
+export const DEFAULT_MIN_BET = 25;
+export const DEFAULT_MAX_BET = 5000;

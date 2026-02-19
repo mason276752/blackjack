@@ -6,6 +6,7 @@ import { DealerHand } from './DealerHand';
 import { PlayerHand } from './PlayerHand';
 import { ActionButtons } from './ActionButtons';
 import { BettingControls } from './BettingControls';
+import { InsuranceControls } from './InsuranceControls';
 import { StrategyHint } from '../strategy/StrategyHint';
 import { CompactCountDisplay } from '../counting/CompactCountDisplay';
 import { CompactStatsDisplay } from '../statistics/CompactStatsDisplay';
@@ -126,6 +127,9 @@ export function GameBoard() {
               : t(`game:${state.message}`)
           ) : ''}
         </div>
+
+        {/* Insurance Controls (Modal) */}
+        <InsuranceControls />
 
         {/* Action Buttons */}
         <ActionButtons />

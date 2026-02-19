@@ -281,7 +281,7 @@ export function useAIPlayer() {
 
   const handlePlacingBetPhase = useCallback(() => {
     const trueCount = getTrueCount(state.runningCount, state.cardsRemaining);
-    const decision = aiPlayer.calculateBet(state.balance, trueCount, 10, 500);
+    const decision = aiPlayer.calculateBet(state.balance, trueCount, 25, 5000);
 
     setAIState(prev => ({ ...prev, currentDecision: decision }));
     dispatch({ type: 'PLACE_BET', amount: decision.betAmount! });
@@ -569,7 +569,7 @@ export function useAIPlayer() {
     }
 
     // BALANCE CHECK (with immediate stop)
-    if (state.balance < 10) {
+    if (state.balance < 25) {
       stopAIImmediate('Insufficient balance');
       return;
     }
@@ -645,7 +645,7 @@ export function useAIPlayer() {
 
   // Control functions
   const startAI = useCallback(() => {
-    if (state.balance < 10) {
+    if (state.balance < 25) {
       dispatch({ type: 'SET_MESSAGE', message: t('ai:status.insufficientBalance') });
       return;
     }

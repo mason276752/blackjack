@@ -113,6 +113,26 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
+    case 'TAKE_INSURANCE': {
+      const insuranceAmount = Math.floor(state.currentBet / 2);
+      if (state.balance < insuranceAmount) {
+        return { ...state, message: 'insufficientBalance' };
+      }
+      return {
+        ...state,
+        insuranceBet: insuranceAmount,
+        balance: state.balance - insuranceAmount,
+        message: 'insuranceTaken',
+      };
+    }
+
+    case 'DECLINE_INSURANCE':
+      return {
+        ...state,
+        insuranceBet: 0,
+        message: 'insuranceDeclined',
+      };
+
     case 'HIT': {
       const newHands = [...state.hands];
       const currentHand = { ...newHands[state.activeHandIndex] };

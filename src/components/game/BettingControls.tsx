@@ -6,7 +6,7 @@ import { useAIPlayer } from '../../hooks/useAIPlayer';
 import { theme, textStyles, getChipColor, getOpacity, getCursor } from '../../styles';
 import { Button } from '../common/Button';
 
-const CHIP_VALUES = [5, 10, 25, 50, 100];
+const CHIP_VALUES = [25, 50, 100, 250, 500];
 
 export function BettingControls() {
   const { t } = useTranslation(['betting', 'common']);
