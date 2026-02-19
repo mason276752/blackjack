@@ -175,11 +175,50 @@ export function useAIPlayer() {
   const handleInfiniteLoop = useCallback(() => {
     console.error('[AI Recovery] Infinite loop detected', {
       aiPhase: aiState.aiPhase,
+      gamePhase: state.phase,
       iterations: aiState.iterationCount,
     });
 
-    stopAIImmediate('Infinite loop protection triggered');
-  }, [aiState.aiPhase, aiState.iterationCount]);
+    setAIState(prev => ({
+      ...prev,
+      stuckDetected: true,
+      errorMessage: `Infinite loop in ${aiState.aiPhase} (${aiState.iterationCount} iterations)`,
+    }));
+
+    // Try the same recovery strategy as handleStuckState
+    switch (state.phase) {
+      case 'betting':
+        transitionToPhase('waiting_bet');
+        break;
+      case 'dealing':
+        transitionToPhase('waiting_deal_complete');
+        break;
+      case 'player_turn':
+        // Check if all hands are done
+        const allHandsDone = state.hands.every(hand => hand.status !== 'active');
+        if (allHandsDone) {
+          // Trigger dealer turn
+          gameLogic.playDealerHand();
+          transitionToPhase('waiting_dealer');
+        } else {
+          transitionToPhase('deciding_action');
+        }
+        break;
+      case 'dealer_turn':
+        // Already in dealer turn, maybe dealer is stuck?
+        // Force trigger dealer play again
+        gameLogic.playDealerHand();
+        transitionToPhase('waiting_dealer');
+        break;
+      case 'resolution':
+        gameLogic.newRound();
+        transitionToPhase('waiting_bet');
+        break;
+      default:
+        // Truly unrecoverable - stop AI
+        stopAIImmediate('Infinite loop - unrecoverable');
+    }
+  }, [aiState.aiPhase, aiState.iterationCount, gameLogic, setAIState, state.hands, state.phase, transitionToPhase]);
 
   // Immediate stop (synchronous)
   const stopAIImmediate = useCallback((reason: string) => {
@@ -411,6 +450,24 @@ export function useAIPlayer() {
       return;
     }
 
+    // Check if we're stuck in player_turn when all hands are done
+    if (state.phase === 'player_turn') {
+      const allHandsDone = state.hands.every(hand => hand.status !== 'active');
+      if (allHandsDone) {
+        logAIState('All hands done but still in player_turn, triggering dealer turn');
+        // Manually trigger dealer play
+        gameLogic.playDealerHand();
+        return;
+      }
+    }
+
+    // If phase is still player_turn but not all hands done, sync back to deciding_action
+    if (state.phase === 'player_turn') {
+      logAIState('Phase mismatch: still in player_turn with active hands, syncing to deciding_action');
+      transitionToPhase('deciding_action');
+      return;
+    }
+
     // Update decision display if not set
     if (!aiState.currentDecision || aiState.currentDecision.action !== 'wait') {
       setAIState(prev => ({
@@ -418,7 +475,7 @@ export function useAIPlayer() {
         currentDecision: { action: 'wait', reasoning: t('ai:status.dealerPlaying') }
       }));
     }
-  }, [aiState.currentDecision, logAIState, setAIState, state.phase, t, transitionToPhase]);
+  }, [aiState.currentDecision, gameLogic, logAIState, setAIState, state.hands, state.phase, t, transitionToPhase]);
 
   const handleWaitingResolutionPhase = useCallback(() => {
     const waitTime = Math.max(aiState.speed * 2, 1000);
