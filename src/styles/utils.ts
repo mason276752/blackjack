@@ -3,7 +3,7 @@
  */
 
 import { theme } from './theme';
-import { HandResult } from '../types/game.types';
+import { HandResult } from '../types/stats.types';
 
 /**
  * Get status color based on hand result and active state.

@@ -5,7 +5,7 @@ interface RuleInputProps {
   label: string;
   value: number | string | boolean;
   onChange: (value: number | string | boolean) => void;
-  options?: Array<{ value: number | string; label: string }>;
+  options?: Array<{ value: number | string | boolean; label: string }>;
   min?: number;
   max?: number;
   step?: number;
