@@ -81,7 +81,7 @@ export function AIControlPanel() {
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '14px' }}>
           <span style={{ color: '#94a3b8' }}>{t('gameSpeed')}:</span>
           <span style={{ color: '#fbbf24', fontWeight: 'bold' }}>
-            {aiState.speed < 100 ? t('veryFast') : `${aiState.speed}ms`}
+            {aiState.speed < 100 ? t('veryFast') : aiState.speed > 1500 ? t('slow') : aiState.speed > 800 ? t('fast') : t('veryFast')}
           </span>
         </div>
         <input
@@ -89,8 +89,8 @@ export function AIControlPanel() {
           min="50"
           max="2000"
           step="50"
-          value={aiState.speed}
-          onChange={(e) => setSpeed(Number(e.target.value))}
+          value={2050 - aiState.speed}
+          onChange={(e) => setSpeed(2050 - Number(e.target.value))}
           disabled={!aiState.isEnabled}
           style={{
             width: '100%',
@@ -102,8 +102,8 @@ export function AIControlPanel() {
           }}
         />
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
-          <span>{t('fast')}</span>
           <span>{t('slow')}</span>
+          <span>{t('fast')}</span>
         </div>
       </div>
 
