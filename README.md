@@ -1,256 +1,350 @@
-# Blackjack Game
+# 二十一點遊戲 (Blackjack Game)
 
-A sophisticated web-based blackjack simulator with AI auto-play, card counting, and comprehensive rule customization. Built with React, TypeScript, and Vite.
+**[English](./README.en.md) | 繁體中文**
 
-## Features
+---
 
-### Core Gameplay
-- **Full Blackjack Implementation**: Standard blackjack gameplay with hit, stand, double down, split, and surrender options
-- **Customizable Rules**: Extensive rule configuration including deck count, dealer behavior, payout ratios, and more
-- **Multiple Rule Presets**: Quick setup with Las Vegas Strip, Atlantic City, European, and other regional variations
-- **Realistic Dealer AI**: Simulates authentic dealer behavior with configurable hit/stand rules
+一個功能完整的網頁版二十一點模擬器，具備 AI 自動遊玩、算牌系統和全面的規則自訂功能。使用 React、TypeScript 和 Vite 建構。
 
-### Card Counting
-- **Multiple Counting Systems**:
-  - Hi-Lo (default, balanced system)
-  - KO (unbalanced knock-out)
-  - Hi-Opt I & II (advanced systems)
-  - Omega II (multi-level system)
-- **Real-Time Count Tracking**: Running count and true count display with remaining deck calculation
-- **Visual Indicators**: Color-coded count display showing favorable/unfavorable situations
+## 線上體驗
 
-### AI Auto-Play
-- **Intelligent Decision Making**: AI uses basic strategy tables for optimal play decisions
-- **Dynamic Bet Spreading**: Practical 1-12 unit bet spread based on true count
-- **Adjustable Speed**: Configurable game speed from 50ms to 2000ms
-- **Live Decision Display**: See AI's reasoning for each action in real-time
-- **Statistics Tracking**: Monitor rounds played, decisions made, and average bet size
-- **Recovery Mechanisms**: Automatic stuck detection and retry functionality
+🎮 **[立即遊玩](https://mason276752.github.io/blackjack/)**
 
-### Strategy Assistant
-- **Interactive Strategy Tables**:
-  - Hard totals (5-20 vs dealer 2-A)
-  - Soft totals (A-2 through A-9 vs dealer 2-A)
-  - Pair splitting (2-2 through A-A vs dealer 2-A)
-- **Visual Highlighting**: Current hand situation highlighted on strategy tables
-- **Action Hints**: Color-coded recommendations (hit, stand, double, split, surrender)
+## 功能特色
 
-### User Interface
-- **Three-Column Layout**: Strategy tables (left), game area (center), rules panel (right)
-- **Responsive Design**: Optimized for desktop and tablet viewing
-- **Bilingual Support**: Full English and Traditional Chinese (繁體中文) localization
-- **Card Sprites**: Visual card representation with suit and rank display
-- **Statistics Dashboard**: Track bankroll, hands played, win rate, and more
+### 核心遊戲玩法
+- **完整二十一點實作**：標準二十一點玩法，包含補牌(Hit)、停牌(Stand)、加倍(Double Down)、分牌(Split)、投降(Surrender)
+- **自訂規則**：豐富的規則配置，包括牌組數量、莊家行為、賠率等
+- **多種規則預設**：快速設定拉斯維加斯大道、大西洋城、歐洲等地區變體
+- **真實莊家 AI**：模擬真實莊家行為，可配置補牌/停牌規則
 
-## Tech Stack
+### 算牌系統
+- **多種算牌系統**：
+  - Hi-Lo（預設，平衡系統）
+  - KO（不平衡敲除系統）
+  - Hi-Opt I & II（進階系統）
+  - Omega II（多級系統）
+- **即時計數追蹤**：顯示運行計數(Running Count)和真實計數(True Count)，附剩餘牌組計算
+- **視覺化指標**：色彩編碼顯示有利/不利情況
 
-- **React 18.2**: Modern React with hooks and context
-- **TypeScript 5.2**: Full type safety throughout the codebase
-- **Vite 5.2**: Fast development and optimized production builds
-- **i18next**: Internationalization with language detection
-- **ESLint**: Code quality and consistency
+### AI 自動遊玩
+- **智能決策**：AI 使用基本策略表進行最佳遊玩決策
+- **動態下注策略**：基於真實計數的實用 1-12 單位下注策略
+- **可調速度**：可配置遊戲速度從 50ms 到 2000ms
+- **即時決策顯示**：即時查看 AI 每個動作的推理過程
+- **統計追蹤**：監控遊玩回合數、決策次數、平均下注額
+- **恢復機制**：自動偵測卡死狀態並提供重試功能
 
-## Project Structure
+### 策略助手
+- **互動式策略表**：
+  - 硬牌總和（5-20 vs 莊家 2-A）
+  - 軟牌總和（A-2 至 A-9 vs 莊家 2-A）
+  - 對子分牌（2-2 至 A-A vs 莊家 2-A）
+- **視覺化高亮**：當前手牌情況在策略表上高亮顯示
+- **動作提示**：色彩編碼建議（補牌、停牌、加倍、分牌、投降）
+
+### 使用者介面
+- **三欄佈局**：策略表（左）、遊戲區域（中）、規則面板（右）
+- **響應式設計**：針對桌面和平板優化
+- **雙語支援**：完整的英文和繁體中文本地化
+- **撲克牌圖像**：視覺化撲克牌顯示，包含花色和點數
+- **統計儀表板**：追蹤資金、遊玩手數、勝率等
+
+## 技術堆疊
+
+- **React 18.2**：現代 React，使用 Hooks 和 Context
+- **TypeScript 5.2**：完整的類型安全
+- **Vite 5.2**：快速開發和優化的生產構建
+- **i18next**：國際化支援與語言檢測
+- **ESLint**：程式碼品質和一致性
+
+## 專案結構
 
 ```
 src/
 ├── components/
-│   ├── ai/              # AI control panel and UI
-│   ├── common/          # Reusable components (language switcher, etc.)
-│   ├── counting/        # Card counting displays and selectors
-│   ├── game/            # Core game UI (board, cards, controls)
-│   ├── layout/          # Layout components (header, grid)
-│   ├── settings/        # Rule configuration UI
-│   ├── statistics/      # Stats displays
-│   └── strategy/        # Strategy table components
+│   ├── ai/              # AI 控制面板和 UI
+│   ├── common/          # 可重用元件（語言切換器等）
+│   ├── counting/        # 算牌顯示和選擇器
+│   ├── game/            # 核心遊戲 UI（遊戲板、卡牌、控制）
+│   ├── layout/          # 佈局元件（標題、網格）
+│   ├── settings/        # 規則配置 UI
+│   ├── statistics/      # 統計顯示
+│   └── strategy/        # 策略表元件
 ├── context/
-│   ├── GameContext.tsx  # Global game state provider
-│   ├── gameReducer.ts   # State management logic
-│   └── gameActions.ts   # Action dispatchers
+│   ├── GameContext.tsx  # 全域遊戲狀態提供者
+│   ├── gameReducer.ts   # 狀態管理邏輯
+│   └── gameActions.ts   # Action 調度器
 ├── hooks/
-│   ├── useAIPlayer.ts   # AI game loop orchestration
-│   ├── useGameLogic.ts  # Core game logic (hit, stand, etc.)
-│   ├── useInterval.ts   # Robust interval hook
-│   └── useBreakpoint.ts # Responsive design utilities
+│   ├── useAIPlayer.ts   # AI 遊戲循環編排
+│   ├── useGameLogic.ts  # 核心遊戲邏輯（補牌、停牌等）
+│   ├── useInterval.ts   # 穩健的間隔 Hook
+│   └── useBreakpoint.ts # 響應式設計工具
 ├── lib/
-│   ├── ai/              # AI player logic and decision making
-│   ├── counting/        # Card counting implementations
-│   ├── dealer/          # Dealer AI logic
-│   ├── deck/            # Card and shoe management
-│   ├── hand/            # Hand evaluation logic
-│   ├── rules/           # Payout and rule calculations
-│   └── strategy/        # Basic strategy tables
+│   ├── ai/              # AI 玩家邏輯和決策
+│   ├── counting/        # 算牌實作
+│   ├── dealer/          # 莊家 AI 邏輯
+│   ├── deck/            # 卡牌和牌靴管理
+│   ├── hand/            # 手牌評估邏輯
+│   ├── rules/           # 賠付和規則計算
+│   └── strategy/        # 基本策略表
 ├── i18n/
-│   ├── locales/         # Translation files (en, zh-TW)
-│   └── config.ts        # i18n configuration
-├── types/               # TypeScript type definitions
-└── constants/           # Game constants and defaults
+│   ├── locales/         # 翻譯檔案（en, zh-TW）
+│   └── config.ts        # i18n 配置
+├── types/               # TypeScript 類型定義
+└── constants/           # 遊戲常數和預設值
 ```
 
-## Getting Started
+## 快速開始
 
-### Prerequisites
+### 前置需求
 - Node.js 16+
-- npm or yarn
+- npm 或 yarn
 
-### Installation
+### 安裝
 
 ```bash
-# Clone the repository
-git clone <repository-url>
+# 克隆專案
+git clone https://github.com/mason276752/blackjack.git
 cd blackjack
 
-# Install dependencies
+# 安裝依賴
 npm install
 
-# Start development server
+# 啟動開發伺服器
 npm run dev
 ```
 
-The application will be available at `http://localhost:5173`
+應用程式將在 `http://localhost:5173` 上運行
 
-### Build for Production
+### 生產環境構建
 
 ```bash
 npm run build
 ```
 
-### Preview Production Build
+### 預覽生產構建
 
 ```bash
 npm run preview
 ```
 
-## Usage
+### 執行測試
 
-### Manual Play
+```bash
+npm test
+```
 
-1. **Configure Rules** (optional): Click the gear icon to customize game rules or select a preset
-2. **Select Counting System** (optional): Choose your preferred card counting system from the header
-3. **Place Bet**: Use chip buttons to place your bet
-4. **Deal Cards**: Click "Deal Cards" to start the round
-5. **Make Decisions**: Use action buttons (Hit, Stand, Double, Split, Surrender) based on your strategy
-6. **View Strategy Hints**: Check the strategy tables on the left for optimal play recommendations
-7. **Track Count**: Monitor the running count and true count in the header
+## 使用說明
 
-### AI Auto-Play
+### 手動遊玩
 
-1. **Start AI**: Click the "Play" button (▶) in the AI Control Panel
-2. **Adjust Speed**: Use the slider to control game speed (50-2000ms)
-3. **Monitor Decisions**: Watch the AI's reasoning and statistics in real-time
-4. **Pause/Resume**: Click "Pause" (⏸) to pause, then "Play" to resume
-5. **Stop AI**: Click "Stop" (⏹) to completely stop and reset AI statistics
-6. **Retry on Error**: If AI gets stuck, click the "Retry" button in the error display
+1. **配置規則**（可選）：點擊齒輪圖示自訂遊戲規則或選擇預設
+2. **選擇算牌系統**（可選）：從標題區域選擇你偏好的算牌系統
+3. **下注**：使用籌碼按鈕進行下注
+4. **發牌**：點擊「發牌」開始回合
+5. **做決策**：根據策略使用動作按鈕（補牌、停牌、加倍、分牌、投降）
+6. **查看策略提示**：查看左側策略表獲得最佳遊玩建議
+7. **追蹤計數**：在標題區域監控運行計數和真實計數
 
-## Game Rules
+### AI 自動遊玩
 
-### Default Configuration
-- **Decks**: 6 decks
-- **Dealer**: Stands on soft 17
-- **Blackjack Payout**: 3:2
-- **Double**: Any two cards
-- **Double After Split**: Allowed
-- **Resplit**: Up to 3 times (4 hands total)
-- **Resplit Aces**: Not allowed
-- **Hit Split Aces**: Not allowed
-- **Late Surrender**: Allowed
-- **Insurance**: Available when dealer shows Ace
-- **Penetration**: 75% (reshuffle at 1.5 decks remaining)
+1. **啟動 AI**：在 AI 控制面板點擊「播放」按鈕 (▶)
+2. **調整速度**：使用滑桿控制遊戲速度（50-2000ms）
+3. **監控決策**：即時觀察 AI 的推理和統計數據
+4. **暫停/繼續**：點擊「暫停」(⏸) 暫停，再點擊「播放」繼續
+5. **停止 AI**：點擊「停止」(⏹) 完全停止並重置 AI 統計
+6. **錯誤重試**：如果 AI 卡住，點擊錯誤顯示中的「重試」按鈕
 
-### Rule Customization
-All rules can be customized through the settings panel:
-- Deck count (1-8 decks)
-- Dealer behavior (hit/stand on soft 17)
-- Blackjack payout ratio (6:5, 3:2, 2:1)
-- Double down restrictions
-- Split/resplit rules
-- Insurance availability
-- Surrender options
+## 遊戲規則
 
-## Card Counting Systems
+### 預設配置
+- **牌組數**：6 副牌
+- **莊家規則**：軟 17 停牌 (S17)
+- **二十一點賠率**：3:2
+- **加倍**：任意兩張牌
+- **分牌後加倍**：允許
+- **重新分牌**：最多 3 次（共 4 手牌）
+- **重新分 A**：不允許
+- **分 A 後補牌**：不允許
+- **後期投降**：允許
+- **保險**：莊家明牌為 A 時可用
+- **滲透率**：75%（剩餘 1.5 副牌時重新洗牌）
+- **起始資金**：$25,000
+- **最小下注**：$25
+- **最大下注**：$5,000
 
-### Hi-Lo (Recommended for Beginners)
-- Low cards (2-6): +1
-- Neutral (7-9): 0
-- High cards (10-A): -1
-- Balanced system, requires true count conversion
+### 規則自訂
+所有規則都可以通過設定面板自訂：
+- 牌組數量（1-8 副牌）
+- 莊家行為（軟 17 補牌/停牌）
+- 二十一點賠率（6:5、3:2、2:1）
+- 加倍限制
+- 分牌/重新分牌規則
+- 保險可用性
+- 投降選項
 
-### KO (Knock-Out)
-- Low cards (2-7): +1
-- Neutral (8-9): 0
-- High cards (10-A): -1
-- Unbalanced system, no true count needed
+### 金額四捨五入規則
+遊戲採用**對玩家不利的四捨五入**策略，符合真實賭場慣例：
+- **成本（玩家支付）**：向上取整（例：$25 下注的保險費為 $13，而非 $12）
+- **賠付（玩家收取）**：向下取整（例：$27 下注的二十一點賠付為 $67，而非 $67.5）
+
+**建議**：使用偶數金額下注（$50、$100、$200 等）以避免四捨五入損失。
+
+## 算牌系統
+
+### Hi-Lo（推薦初學者）
+- 低牌 (2-6): +1
+- 中性牌 (7-9): 0
+- 高牌 (10-A): -1
+- 平衡系統，需要轉換為真實計數
+
+### KO（敲除系統）
+- 低牌 (2-7): +1
+- 中性牌 (8-9): 0
+- 高牌 (10-A): -1
+- 不平衡系統，無需真實計數
 
 ### Hi-Opt I
-- Low cards (3-6): +1
-- Neutral (2, 7-9, A): 0
-- High cards (10-K): -1
-- Advanced balanced system
+- 低牌 (3-6): +1
+- 中性牌 (2, 7-9, A): 0
+- 高牌 (10-K): -1
+- 進階平衡系統
 
 ### Hi-Opt II
-- Low cards (2, 3, 6, 7): +1
-- Mid cards (4, 5): +2
-- Neutral (8, 9, A): 0
-- High cards (10-K): -2
-- Multi-level balanced system
+- 低牌 (2, 3, 6, 7): +1
+- 中牌 (4, 5): +2
+- 中性牌 (8, 9, A): 0
+- 高牌 (10-K): -2
+- 多級平衡系統
 
 ### Omega II
-- Most complex multi-level system
-- Requires side count of Aces
-- Highest theoretical win rate
+- 最複雜的多級系統
+- 需要單獨計算 A 的數量
+- 理論上最高勝率
 
-## AI Bet Spreading Strategy
+## AI 下注策略
 
-The AI uses a practical bet spread based on true count:
+AI 使用基於真實計數的實用下注策略：
 
-| True Count | Bet Units | Example ($10 min) |
-|------------|-----------|-------------------|
-| ≤ 0        | 1 unit    | $10              |
-| +1         | 2 units   | $20              |
-| +2         | 4 units   | $40              |
-| +3         | 8 units   | $80              |
-| ≥ +4       | 12 units  | $120             |
+| 真實計數 | 下注單位 | 範例（$25 最小注）|
+|----------|---------|-------------------|
+| ≤ 0      | 1 單位  | $25              |
+| +1       | 2 單位  | $50              |
+| +2       | 4 單位  | $100             |
+| +3       | 8 單位  | $200             |
+| ≥ +4     | 12 單位 | $300             |
 
-This 1-12 spread balances profitability with camouflage, matching real-world card counting practice.
+這個 1-12 單位的策略在獲利性和隱蔽性之間取得平衡，符合實際算牌實務。
 
-## Performance Considerations
+## 效能考量
 
-- AI minimum speed enforced at 50ms to prevent performance issues
-- Automatic shoe reshuffle at configurable penetration level
-- Optimized re-renders with React.memo and useMemo
-- Efficient card sprite rendering
+- AI 最小速度限制為 50ms 以防止效能問題
+- 在可配置的滲透率水平自動重新洗牌
+- 使用 React.memo 和 useMemo 優化重新渲染
+- 高效的卡牌精靈圖渲染
 
-## Browser Support
+## 瀏覽器支援
 
 - Chrome/Edge 90+
 - Firefox 88+
 - Safari 14+
 
-## Troubleshooting
+## 故障排除
 
-### AI Stops Playing
-- The AI has built-in stuck detection (10-second timeout)
-- If detected, an error message will appear with a "Retry" button
-- Click "Stop" then "Play" to restart if issues persist
+### AI 停止遊玩
+- AI 內建卡死偵測（10 秒超時）
+- 如果偵測到，會顯示錯誤訊息和「重試」按鈕
+- 如果問題持續，點擊「停止」再點擊「播放」重新啟動
 
-### Statistics Not Updating
-- Ensure you're not in betting phase (stats update after hand resolution)
-- Check browser console for any errors
+### 統計數據未更新
+- 確保不在下注階段（統計在手牌結算後更新）
+- 檢查瀏覽器控制台是否有錯誤
 
-### Strategy Tables Not Highlighting
-- Verify you're in player_turn phase
-- Check that current hand has valid cards
+### 策略表未高亮
+- 驗證處於玩家回合階段
+- 檢查當前手牌有有效卡牌
 
-## Contributing
+## 開發與部署
 
-This is a personal project, but suggestions and feedback are welcome.
+### GitHub Actions CI/CD
+專案使用 GitHub Actions 自動化部署到 GitHub Pages：
+- 自動執行測試套件
+- 構建生產版本
+- 部署到 GitHub Pages
 
-## License
+### 本地開發
+```bash
+# 開發模式（熱重載）
+npm run dev
 
-MIT License - See LICENSE file for details
+# 類型檢查
+npm run type-check
 
-## Acknowledgments
+# Lint 檢查
+npm run lint
 
-- Basic strategy tables based on mathematical analysis by Edward Thorp
-- Card counting systems from "Beat the Dealer" and other blackjack literature
-- UI design inspired by modern casino gaming interfaces
+# 執行測試
+npm test
+
+# 生產構建
+npm run build
+```
+
+## 貢獻
+
+這是個人專案，但歡迎建議和反饋。
+
+## 授權
+
+MIT License - 詳見 LICENSE 檔案
+
+## 致謝
+
+- 基本策略表基於 Edward Thorp 的數學分析
+- 算牌系統來自《Beat the Dealer》等二十一點文獻
+- UI 設計靈感來自現代賭場遊戲介面
+- 撲克牌圖像來源：公開資源
+
+## 版本歷史
+
+### v1.0.0（最新）
+- ✅ 完整二十一點遊戲實作
+- ✅ AI 自動遊玩系統
+- ✅ 5 種算牌系統（Hi-Lo、KO、Hi-Opt I/II、Omega II）
+- ✅ 互動式策略表
+- ✅ 雙語支援（繁體中文、英文）
+- ✅ 保險功能
+- ✅ 玩家不利四捨五入規則
+- ✅ GitHub Pages 自動部署
+- ✅ 完整測試覆蓋（104 個測試）
+
+## 技術亮點
+
+### 狀態管理
+- React Context + useReducer 模式
+- 不可變狀態更新
+- 類型安全的 Actions 和 State
+
+### AI 實作
+- 基於基本策略表的決策引擎
+- 真實計數導向的下注系統
+- 三層卡死偵測和恢復機制
+- 完整的統計追蹤
+
+### 國際化
+- i18next 完整整合
+- 語言偵測和持久化
+- 命名空間分離（common、game、ai、rules 等）
+
+### 測試
+- Jest 單元測試
+- 賠付計算測試
+- 算牌系統測試
+- AI 決策邏輯測試
+
+---
+
+**開發者**：Mason
+**專案連結**：[GitHub Repository](https://github.com/mason276752/blackjack)
+**線上展示**：[Play Now](https://mason276752.github.io/blackjack/)
