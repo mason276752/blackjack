@@ -31,5 +31,20 @@
   "decks": "Decks",
   "penetration": "Penetration",
   "strategyHints": "Strategy Hints",
-  "cardCount": "Card Count"
+  "cardCount": "Card Count",
+  "cardValue": {
+    "A": "에이스: 1점 또는 11점",
+    "2": "2: 2점",
+    "3": "3: 3점",
+    "4": "4: 4점",
+    "5": "5: 5점",
+    "6": "6: 6점",
+    "7": "7: 7점",
+    "8": "8: 8점",
+    "9": "9: 9점",
+    "10": "10: 10점",
+    "J": "잭: 10점",
+    "Q": "퀸: 10점",
+    "K": "킹: 10점"
+  }
 }

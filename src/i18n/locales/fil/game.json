@@ -31,5 +31,20 @@
   "decks": "Decks",
   "penetration": "Penetration",
   "strategyHints": "Strategy Hints",
-  "cardCount": "Card Count"
+  "cardCount": "Card Count",
+  "cardValue": {
+    "A": "Ace: 1 o 11 puntos",
+    "2": "2: 2 puntos",
+    "3": "3: 3 puntos",
+    "4": "4: 4 puntos",
+    "5": "5: 5 puntos",
+    "6": "6: 6 puntos",
+    "7": "7: 7 puntos",
+    "8": "8: 8 puntos",
+    "9": "9: 9 puntos",
+    "10": "10: 10 puntos",
+    "J": "Jack: 10 puntos",
+    "Q": "Queen: 10 puntos",
+    "K": "King: 10 puntos"
+  }
 }
