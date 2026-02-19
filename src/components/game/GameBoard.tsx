@@ -137,9 +137,6 @@ export function GameBoard() {
         {/* Betting Controls */}
         <BettingControls />
 
-        {/* AI Control Panel */}
-        <AIControlPanel />
-
         {/* New Round Button */}
         {state.phase === 'resolution' && (
           <div style={{ textAlign: 'center', marginTop: theme.spacing.lg }}>
@@ -152,6 +149,9 @@ export function GameBoard() {
             </Button>
           </div>
         )}
+
+        {/* AI Control Panel */}
+        <AIControlPanel />
 
         {/* Game Controls */}
         <div style={{ textAlign: 'center', marginTop: theme.spacing['2xl'] }}>

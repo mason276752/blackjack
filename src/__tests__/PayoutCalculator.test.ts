@@ -63,6 +63,18 @@ describe('PayoutCalculator', () => {
         expect(result200.payout).toBe(500); // 200 + 300
       });
 
+      it('should round DOWN blackjack payouts (player-unfavorable)', () => {
+        // Odd bet with 3:2: 27 * 2.5 = 67.5 → round down to 67
+        const hand27 = createHand(27, 21, 'blackjack');
+        const result27 = PayoutCalculator.calculatePayout(hand27, 19, false, standardRules);
+        expect(result27.payout).toBe(67); // Floor of 67.5 (27 + 40.5)
+
+        // Odd bet with 6:5: 55 * 2.2 = 121 (no fraction in this case)
+        const hand55 = createHand(55, 21, 'blackjack');
+        const result55 = PayoutCalculator.calculatePayout(hand55, 19, false, sixToFiveRules);
+        expect(result55.payout).toBe(121); // 55 * 2.2
+      });
+
       it('should push when both player and dealer have blackjack', () => {
         const hand = createHand(100, 21, 'blackjack');
         const result = PayoutCalculator.calculatePayout(hand, 21, true, standardRules);
@@ -184,6 +196,18 @@ describe('PayoutCalculator', () => {
         const result200 = PayoutCalculator.calculatePayout(hand200, 10, false, standardRules);
         expect(result200.payout).toBe(100);
       });
+
+      it('should round DOWN surrender payouts (player-unfavorable)', () => {
+        // Odd bet: 51 / 2 = 25.5 → round down to 25
+        const hand51 = createHand(51, 15, 'surrender');
+        const result51 = PayoutCalculator.calculatePayout(hand51, 20, false, standardRules);
+        expect(result51.payout).toBe(25); // Floor of 25.5
+
+        // Odd bet: 99 / 2 = 49.5 → round down to 49
+        const hand99 = createHand(99, 16, 'surrender');
+        const result99 = PayoutCalculator.calculatePayout(hand99, 10, false, standardRules);
+        expect(result99.payout).toBe(49); // Floor of 49.5
+      });
     });
 
     describe('Edge cases', () => {
@@ -244,6 +268,15 @@ describe('PayoutCalculator', () => {
       expect(PayoutCalculator.calculateInsurancePayout(10, false)).toBe(0);
       expect(PayoutCalculator.calculateInsurancePayout(100, false)).toBe(0);
       expect(PayoutCalculator.calculateInsurancePayout(500, false)).toBe(0);
+    });
+
+    it('should round DOWN insurance payouts (player-unfavorable)', () => {
+      // This scenario is unlikely since insurance is typically taken with even bets
+      // But if insurance bet itself is odd: 17 * 3 = 51 (no fraction)
+      expect(PayoutCalculator.calculateInsurancePayout(17, true)).toBe(51);
+
+      // Fractional example would need non-integer insurance bet, which shouldn't happen
+      // but the Math.floor ensures safety
     });
   });
 });

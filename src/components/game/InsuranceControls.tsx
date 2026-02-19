@@ -24,7 +24,8 @@ export function InsuranceControls() {
 
   if (!shouldShowInsurance) return null;
 
-  const insuranceCost = Math.floor(state.currentBet / 2);
+  // Player-unfavorable rounding: round UP costs to player
+  const insuranceCost = Math.ceil(state.currentBet / 2);
   const canAffordInsurance = state.balance >= insuranceCost;
 
   const handleTakeInsurance = () => {

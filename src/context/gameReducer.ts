@@ -114,7 +114,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'TAKE_INSURANCE': {
-      const insuranceAmount = Math.floor(state.currentBet / 2);
+      // Player-unfavorable rounding: round UP costs to player
+      const insuranceAmount = Math.ceil(state.currentBet / 2);
       if (state.balance < insuranceAmount) {
         return { ...state, message: 'insufficientBalance' };
       }

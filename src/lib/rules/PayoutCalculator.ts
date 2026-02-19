@@ -21,7 +21,8 @@ export class PayoutCalculator {
     if (playerHand.status === 'surrender') {
       return {
         result: 'surrender',
-        payout: playerHand.bet * 0.5, // Get back half the bet
+        // Player-unfavorable rounding: round DOWN payouts to player
+        payout: Math.floor(playerHand.bet * 0.5), // Get back half the bet
       };
     }
 
@@ -43,7 +44,8 @@ export class PayoutCalculator {
       }
       return {
         result: 'blackjack',
-        payout: playerHand.bet * (1 + rules.blackjackPayout), // Bet + winnings
+        // Player-unfavorable rounding: round DOWN payouts to player
+        payout: Math.floor(playerHand.bet * (1 + rules.blackjackPayout)), // Bet + winnings
       };
     }
 
@@ -87,6 +89,7 @@ export class PayoutCalculator {
 
   static calculateInsurancePayout(insuranceBet: number, dealerBlackjack: boolean): number {
     // Insurance pays 2:1
-    return dealerBlackjack ? insuranceBet * 3 : 0; // Return bet + 2x winnings
+    // Player-unfavorable rounding: round DOWN payouts to player
+    return dealerBlackjack ? Math.floor(insuranceBet * 3) : 0; // Return bet + 2x winnings
   }
 }
