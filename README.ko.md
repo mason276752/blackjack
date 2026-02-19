@@ -8,6 +8,7 @@ AI 자동 플레이, 다중 카드 카운팅 시스템, 전략 편차 힌트 및
 
 ## 라이브 데모
 <img width="1903" height="905" alt="image" src="https://github.com/user-attachments/assets/b3d2b761-58fa-4161-85db-3ff8de65ba46" />
+
 🎮 **[지금 플레이](https://mason276752.github.io/blackjack/)**
 
 ## 주요 기능
