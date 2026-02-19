@@ -1,0 +1,11 @@
+{
+  "blackjack": "Blackjack!",
+  "bust": "Bust",
+  "win": "Win ${{amount}}",
+  "lose": "Lose",
+  "push": "Push",
+  "surrender": "Surrender ${{amount}}",
+  "soft": "Soft {{value}}",
+  "bet": "Bet",
+  "bustValue": "Bust ({{value}})"
+}

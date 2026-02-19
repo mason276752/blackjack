@@ -1,10 +1,10 @@
 # Blackjack Game
 
-**English | [繁體中文](./README.md)**
+**English | [繁體中文](./README.md) | [한국어](./README.ko.md) | [Filipino](./README.fil.md)**
 
 ---
 
-A sophisticated web-based blackjack simulator with AI auto-play, card counting, and comprehensive rule customization. Built with React, TypeScript, and Vite.
+A sophisticated web-based blackjack simulator with AI auto-play, multiple card counting systems, strategy deviation hints, and comprehensive rule customization. Built with React, TypeScript, and Vite.
 
 ## Live Demo
 
@@ -17,17 +17,35 @@ A sophisticated web-based blackjack simulator with AI auto-play, card counting, 
 - **Customizable Rules**: Extensive rule configuration including deck count, dealer behavior, payout ratios, and more
 - **Multiple Rule Presets**: Quick setup with Las Vegas Strip, Atlantic City, European, and other regional variations
 - **Realistic Dealer AI**: Simulates authentic dealer behavior with configurable hit/stand rules
+- **Insurance Feature**: Available when dealer shows Ace, manual or automated decision-making
 
-### Card Counting
-- **Multiple Counting Systems**:
-  - Hi-Lo (default, balanced system)
-  - KO (unbalanced knock-out)
-  - Omega II (advanced multi-level system)
-- **Real-Time Count Tracking**: Running count and true count display with remaining deck calculation
-- **Visual Indicators**: Color-coded count display showing favorable/unfavorable situations
+### Card Counting (5 Systems)
+- **Hi-Lo** (Balanced, Beginner-Friendly)
+  - Paired Strategy: Illustrious 18 (18 key deviations)
+  - Betting Correlation: 0.97 | Playing Efficiency: 0.51
+- **KO (Knock-Out)** (Unbalanced)
+  - Paired Strategy: KO Preferred (14 optimized deviations)
+  - Betting Correlation: 0.98 | Playing Efficiency: 0.55
+- **Omega II** (Advanced Multi-Level)
+  - Paired Strategy: Omega II Matrix (17 advanced indices)
+  - Betting Correlation: 0.99 | Playing Efficiency: 0.67
+- **Zen Count** (Precision Multi-Level)
+  - Paired Strategy: Zen Indices (21 precision indices)
+  - Betting Correlation: 0.96 | Playing Efficiency: 0.63
+- **CAC2** (Catch And Count 2)
+  - Paired Strategy: Catch 22 (22 strategic deviations)
+  - Betting Correlation: 0.98 | Playing Efficiency: 0.60
+
+**Hard-Locked System Pairing**: Each counting system is exclusively paired with its dedicated strategy for optimal accuracy
+
+### Strategy Deviation System
+- **Real-Time Deviation Hints**: Display strategy deviations based on true count/running count
+- **Index Plays Panel**: Shows currently applicable strategy deviations (e.g., "16 vs 10 Stand at TC+0")
+- **Intelligent Decision Engine**: AI automatically applies system-specific strategy deviations
+- **Visual Guidance**: Color-coded deviation suggestions (hit, stand, double, split, surrender)
 
 ### AI Auto-Play
-- **Intelligent Decision Making**: AI uses basic strategy tables for optimal play decisions
+- **Intelligent Decision Making**: AI uses basic strategy tables + strategy deviations for optimal play decisions
 - **Dynamic Bet Spreading**: Practical 1-12 unit bet spread based on true count
 - **Adjustable Speed**: Configurable game speed from 50ms to 2000ms
 - **Live Decision Display**: See AI's reasoning for each action in real-time
@@ -41,11 +59,12 @@ A sophisticated web-based blackjack simulator with AI auto-play, card counting, 
   - Pair splitting (2-2 through A-A vs dealer 2-A)
 - **Visual Highlighting**: Current hand situation highlighted on strategy tables
 - **Action Hints**: Color-coded recommendations (hit, stand, double, split, surrender)
+- **Manual Tab Control**: Hard/Soft/Pairs tabs don't auto-switch, user-controlled
 
 ### User Interface
-- **Three-Column Layout**: Strategy tables (left), game area (center), rules panel (right)
+- **Three-Column Layout**: Strategy tables (left 520px), game area (center), rules panel (right 400px)
 - **Responsive Design**: Optimized for desktop and tablet viewing
-- **Bilingual Support**: Full English and Traditional Chinese (繁體中文) localization
+- **Four-Language Support**: Full English, Traditional Chinese, Korean, and Filipino localization
 - **Card Sprites**: Visual card representation with suit and rank display
 - **Statistics Dashboard**: Track bankroll, hands played, win rate, and more
 
@@ -86,12 +105,13 @@ src/
 │   ├── deck/            # Card and shoe management
 │   ├── hand/            # Hand evaluation logic
 │   ├── rules/           # Payout and rule calculations
-│   └── strategy/        # Basic strategy tables
+│   └── strategy/        # Basic strategy tables & deviation resolver
 ├── i18n/
-│   ├── locales/         # Translation files (en, zh-TW)
+│   ├── locales/         # Translation files (en, zh-TW, ko, fil)
 │   └── config.ts        # i18n configuration
 ├── types/               # TypeScript type definitions
 └── constants/           # Game constants and defaults
+    └── strategies/      # Strategy deviation definitions (Illustrious 18, KO Preferred, etc.)
 ```
 
 ## Getting Started
@@ -145,6 +165,7 @@ npm test
 5. **Make Decisions**: Use action buttons (Hit, Stand, Double, Split, Surrender) based on your strategy
 6. **View Strategy Hints**: Check the strategy tables on the left for optimal play recommendations
 7. **Track Count**: Monitor the running count and true count in the header
+8. **Strategy Deviations**: When count reaches threshold, center hint box shows deviation suggestions
 
 ### AI Auto-Play
 
@@ -190,37 +211,105 @@ The game implements **player-unfavorable rounding** to match real casino practic
 
 **Tip**: Use even bet amounts ($50, $100, $200, etc.) to avoid rounding losses.
 
-## Card Counting Systems
+## Card Counting Systems & Strategy Deviations
 
-### Hi-Lo (Recommended for Beginners)
+### Hi-Lo + Illustrious 18 (Recommended for Beginners)
+**Card Values**:
 - **Low cards (2-6)**: +1
 - **Neutral (7-9)**: 0
 - **High cards (10-A)**: -1
+
+**System Characteristics**:
 - **Type**: Balanced system, requires true count conversion
 - **Advantages**: Easy to learn, good effectiveness
 - **Betting Correlation**: 0.97
 - **Playing Efficiency**: 0.51
 
-### KO (Knock-Out)
+**Strategy Deviations**: Illustrious 18 (18 key deviations)
+- Insurance: TC >= +3
+- 16 vs 10 Surrender: TC >= 0
+- 15 vs 10 Stand: TC >= +4
+- ... (18 total deviations)
+
+### KO + KO Preferred (No True Count Conversion)
+**Card Values**:
 - **Low cards (2-7)**: +1
 - **Neutral (8-9)**: 0
 - **High cards (10-A)**: -1
+
+**System Characteristics**:
 - **Type**: Unbalanced system, no true count needed
 - **Advantages**: Simpler than Hi-Lo, no need to track remaining decks
 - **Betting Correlation**: 0.98
 - **Playing Efficiency**: 0.55
 
-### Omega II (Advanced Multi-Level System)
+**Strategy Deviations**: KO Preferred (14 optimized deviations)
+- Insurance: RC >= +3
+- 16 vs 10 Stand: Key Count (-4) or above
+- 12 vs 4/5/6 Hit: IRC (-20) or below
+- ... (14 total deviations)
+
+### Omega II + Omega II Matrix (Advanced Multi-Level System)
+**Card Values**:
 - **+2 cards (4, 5)**: +2
 - **+1 cards (2, 3, 7)**: +1
 - **Neutral (8, 9, A)**: 0
 - **-1 card (9)**: -1
 - **-2 cards (10, J, Q, K)**: -2
+
+**System Characteristics**:
 - **Type**: Balanced multi-level system
 - **Advantages**: Highest theoretical accuracy
 - **Disadvantages**: More complex, requires more practice
 - **Betting Correlation**: 0.99
 - **Playing Efficiency**: 0.67
+
+**Strategy Deviations**: Omega II Matrix (17 advanced indices)
+- Insurance: TC >= +6 (approx 2x Hi-Lo)
+- 16 vs 10 Stand: TC >= 0
+- 10 vs 10 Double: TC >= +9
+- ... (17 total deviations)
+
+### Zen Count + Zen Indices (Precision Multi-Level System)
+**Card Values**:
+- **+2 cards (4, 5, 6)**: +2
+- **+1 cards (2, 3, 7)**: +1
+- **Neutral (8, 9)**: 0
+- **-1 card (A)**: -1
+- **-2 cards (10, J, Q, K)**: -2
+
+**System Characteristics**:
+- **Type**: Balanced multi-level system
+- **Advantages**: Well-balanced precision and complexity
+- **Betting Correlation**: 0.96
+- **Playing Efficiency**: 0.63
+
+**Strategy Deviations**: Zen Indices (21 precision indices)
+- Insurance: TC >= +3
+- 16 vs 10 Stand: TC >= 0
+- 11 vs A Double: TC >= +1
+- ... (21 total deviations)
+
+### CAC2 + Catch 22 (Catch And Count 2)
+**Card Values**:
+- **+2 cards (3, 4, 5)**: +2
+- **+1 cards (2, 6, 7)**: +1
+- **Neutral (8, 9)**: 0
+- **-1 card (A)**: -1
+- **-2 cards (10, J, Q, K)**: -2
+
+**System Characteristics**:
+- **Type**: Balanced multi-level system
+- **Advantages**: 22 deviations provide comprehensive coverage
+- **Betting Correlation**: 0.98
+- **Playing Efficiency**: 0.60
+
+**Strategy Deviations**: Catch 22 (22 strategic deviations)
+- Insurance: TC >= +3
+- 16 vs 10 Stand: TC >= 0
+- Soft 19 vs 5/6 Double: TC >= +2/+1
+- 8 vs 5/6 Double: TC >= +3
+- ... (22 total deviations)
 
 ## AI Bet Spreading Strategy
 
@@ -235,6 +324,44 @@ The AI uses a practical bet spread based on true count:
 | ≥ +4       | 12 units  | $300             |
 
 This 1-12 spread balances profitability with camouflage, matching real-world card counting practice.
+
+## 🌍 Multilingual Support (i18n)
+
+### Supported Languages
+- **English**
+- **繁體中文** (Traditional Chinese)
+- **한국어** (Korean)
+- **Filipino**
+
+### Technical Implementation
+- **i18next**: Full internationalization framework
+- **Language Detection**: Automatic browser language detection
+- **Persistence**: Language selection stored in localStorage
+- **Namespace Separation**:
+  - `common`: Shared UI text
+  - `game`: Game terminology
+  - `actions`: Action buttons
+  - `strategy`: Strategy table labels
+  - `stats`: Statistics labels
+  - `count`: Card counting system names
+  - `hand`: Hand status
+  - `betting`: Betting UI
+  - `rules`: Rule configuration
+  - `ai`: AI control panel
+
+### Switch Language
+Use the language switcher in the top-right header:
+- 🇬🇧 English
+- 🇹🇼 繁體中文
+- 🇰🇷 한국어
+- 🇵🇭 Filipino
+
+### Adding New Languages
+1. Create new language folder in `src/i18n/locales/` (e.g., `ja/` for Japanese)
+2. Copy existing translation files from `en/` or `zh-TW/`
+3. Translate all namespace JSON files
+4. Register new language in `src/i18n/config.ts`
+5. Update language switcher UI
 
 ## Performance Considerations
 
@@ -263,6 +390,10 @@ This 1-12 spread balances profitability with camouflage, matching real-world car
 ### Strategy Tables Not Highlighting
 - Verify you're in player_turn phase
 - Check that current hand has valid cards
+
+### Cannot Decline Insurance
+- Make sure to click "Decline" button (✕ button)
+- After declining, `insuranceBet` is set to -1 (declined state)
 
 ## Development & Deployment
 
@@ -302,12 +433,27 @@ MIT License - See LICENSE file for details
 
 - Basic strategy tables based on mathematical analysis by Edward Thorp
 - Card counting systems from "Beat the Dealer" and other blackjack literature
+- Illustrious 18 developed by Don Schlesinger
+- KO system from "Knock-Out Blackjack"
+- Omega II developed by Bryce Carlson
+- Zen Count developed by Arnold Snyder
 - UI design inspired by modern casino gaming interfaces
 - Card sprites from public resources
 
 ## Version History
 
-### v1.0.0 (Current)
+### v2.0.0 (Current)
+- ✅ 5 card counting systems (Hi-Lo, KO, Omega II, Zen Count, CAC2)
+- ✅ System-strategy hard-locking (enforced pairing)
+- ✅ Real-time strategy deviation hints
+- ✅ Index Plays panel
+- ✅ Four-language support (English, Traditional Chinese, Korean, Filipino)
+- ✅ Strategy table manual tab control (removed auto-switching)
+- ✅ Dealer hand width optimization (consistent with player)
+- ✅ Insurance decline fix (-1 state flag)
+- ✅ Strategy hint height increase (170px)
+
+### v1.0.0
 - ✅ Complete blackjack game implementation
 - ✅ AI auto-play system
 - ✅ 3 card counting systems (Hi-Lo, KO, Omega II)
@@ -328,19 +474,28 @@ MIT License - See LICENSE file for details
 ### AI Implementation
 - Basic strategy table-driven decision engine
 - True count-driven betting system
+- Strategy deviation resolver (StrategyResolver)
 - Three-tier stuck detection and recovery mechanisms
 - Comprehensive statistics tracking
+
+### Card Counting & Strategy Deviations
+- 5 counting systems, each with dedicated strategy set
+- Unified `StrategyDeviation` format
+- Automatic handling of balanced/unbalanced systems (TC/RC)
+- Compile-time enforced system-strategy pairing
 
 ### Internationalization
 - Full i18next integration
 - Language detection and persistence
 - Namespace separation (common, game, ai, rules, etc.)
+- Four-language full coverage
 
 ### Testing
 - Jest unit tests
 - Payout calculation tests
 - Card counting system tests
 - AI decision logic tests
+- StrategyResolver tests
 
 ---
 

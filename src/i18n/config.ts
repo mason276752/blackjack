@@ -26,6 +26,30 @@ import bettingEn from './locales/en/betting.json';
 import rulesEn from './locales/en/rules.json';
 import aiEn from './locales/en/ai.json';
 
+// Import Korean (ko) translations
+import commonKo from './locales/ko/common.json';
+import gameKo from './locales/ko/game.json';
+import actionsKo from './locales/ko/actions.json';
+import strategyKo from './locales/ko/strategy.json';
+import statsKo from './locales/ko/stats.json';
+import countKo from './locales/ko/count.json';
+import handKo from './locales/ko/hand.json';
+import bettingKo from './locales/ko/betting.json';
+import rulesKo from './locales/ko/rules.json';
+import aiKo from './locales/ko/ai.json';
+
+// Import Filipino (fil) translations
+import commonFil from './locales/fil/common.json';
+import gameFil from './locales/fil/game.json';
+import actionsFil from './locales/fil/actions.json';
+import strategyFil from './locales/fil/strategy.json';
+import statsFil from './locales/fil/stats.json';
+import countFil from './locales/fil/count.json';
+import handFil from './locales/fil/hand.json';
+import bettingFil from './locales/fil/betting.json';
+import rulesFil from './locales/fil/rules.json';
+import aiFil from './locales/fil/ai.json';
+
 const resources = {
   'zh-TW': {
     common: commonZhTW,
@@ -51,6 +75,30 @@ const resources = {
     rules: rulesEn,
     ai: aiEn,
   },
+  ko: {
+    common: commonKo,
+    game: gameKo,
+    actions: actionsKo,
+    strategy: strategyKo,
+    stats: statsKo,
+    count: countKo,
+    hand: handKo,
+    betting: bettingKo,
+    rules: rulesKo,
+    ai: aiKo,
+  },
+  fil: {
+    common: commonFil,
+    game: gameFil,
+    actions: actionsFil,
+    strategy: strategyFil,
+    stats: statsFil,
+    count: countFil,
+    hand: handFil,
+    betting: bettingFil,
+    rules: rulesFil,
+    ai: aiFil,
+  },
 };
 
 i18n
@@ -58,9 +106,9 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: 'zh-TW',
+    fallbackLng: 'en',
     defaultNS: 'common',
-    lng: 'zh-TW', // Default language: Traditional Chinese
+    lng: 'en', // Default language: English
     detection: {
       order: ['localStorage', 'navigator'],
       caches: ['localStorage'],

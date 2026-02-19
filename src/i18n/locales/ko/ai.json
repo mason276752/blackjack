@@ -1,0 +1,46 @@
+{
+  "aiPlayer": "AI Player",
+  "play": "Play",
+  "pause": "Pause",
+  "stop": "Stop",
+  "gameSpeed": "Game Speed",
+  "fast": "Fast",
+  "slow": "Slow",
+  "veryFast": "Very Fast",
+  "currentDecision": "Current Decision",
+  "roundsPlayed": "Rounds Played",
+  "decisionsCount": "Decisions Made",
+  "avgBetSize": "Avg Bet Size",
+  "errorDetected": "Error Detected",
+  "retry": "Retry",
+  "waitingForDecision": "Waiting for next decision...",
+
+  "reasoning": {
+    "bet": {
+      "favorable": "favorable",
+      "unfavorable": "unfavorable",
+      "neutral": "neutral",
+      "template": "True Count: {{trueCount}} ({{countDesc}}), Betting {{units}} units = ${{betAmount}}"
+    },
+    "action": {
+      "soft": "Soft",
+      "hard": "Hard",
+      "template": "{{handType}} {{handValue}} vs Dealer {{dealerValue}}: Strategy {{strategyCode}} → {{action}}",
+      "deviationTemplate": "{{baseReasoning}} | I18 Deviation (TC {{trueCount}}): {{deviationDescription}}"
+    },
+    "insurance": {
+      "takeInsurance": "True Count +{{trueCount}} >= +3: Insurance has positive expected value",
+      "declineInsurance": "True Count {{trueCount}} < +3: Insurance has negative expected value",
+      "insufficientBalance": "True Count +{{trueCount}} favors insurance, but insufficient balance"
+    }
+  },
+
+  "status": {
+    "dealerPlaying": "Dealer playing...",
+    "waitingNextRound": "Waiting {{seconds}}s before next round...",
+    "startingNextRound": "Starting next round...",
+    "aiStopped": "AI stopped: {{reason}}",
+    "insufficientBalance": "Insufficient balance to start AI",
+    "aiPausedRuleChange": "AI paused due to rule change"
+  }
+}

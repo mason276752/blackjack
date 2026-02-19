@@ -1,0 +1,39 @@
+{
+  "cardCounting": "Card Counting",
+  "runningCount": "Running Count",
+  "trueCount": "True Count",
+  "decksRemaining": "Decks Remaining",
+  "showCardCount": "Show Card Count",
+  "hideCardCount": "Hide Card Count",
+  "systemSelector": "Counting System:",
+  "strategy": "Strategy",
+  "indexPlays": "index plays",
+  "systemName": {
+    "hi-lo": "Hi-Lo",
+    "ko": "KO",
+    "omega-ii": "Omega II",
+    "zen": "Zen",
+    "cac2": "CAC2"
+  },
+  "systemDescription": {
+    "hi-lo": "+1: 2, 3, 4, 5, 6\n 0: 7, 8, 9\n-1: 10, J, Q, K, A\nBalanced system, easy to learn, best for beginners",
+    "ko": "+1: 2, 3, 4, 5, 6, 7\n 0: 8, 9\n-1: 10, J, Q, K, A\nUnbalanced system, no true count conversion needed",
+    "omega-ii": "+2: 4, 5, 6\n+1: 2, 3, 7\n 0: 8, A\n-1: 9\n-2: 10, J, Q, K\nLevel 2 system, higher accuracy",
+    "zen": "+2: 4, 5, 6\n+1: 2, 3, 7\n 0: 8, 9\n-1: A\n-2: 10, J, Q, K\nBalanced system, high precision",
+    "cac2": "+2: 3, 4, 5\n+1: 2, 6, 7\n 0: 8, 9\n-1: A\n-2: 10, J, Q, K\nLevel 2 system, 22 strategy deviations"
+  },
+  "strategyName": {
+    "illustrious18": "Illustrious 18",
+    "ko_preferred": "KO Preferred",
+    "omega_matrix": "Omega II Matrix",
+    "zen_indices": "Zen Indices",
+    "catch22": "Catch 22"
+  },
+  "changeWarningTitle": "Change Counting System?",
+  "changeWarningMessage": "Changing the counting system will reset the running count and true count to zero. Continue?",
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "hiLo": "Hi-Lo",
+  "ko": "KO",
+  "omegaII": "Omega II"
+}
