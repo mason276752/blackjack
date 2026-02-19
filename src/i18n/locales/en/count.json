@@ -6,11 +6,27 @@
   "showCardCount": "Show Card Count",
   "hideCardCount": "Hide Card Count",
   "systemSelector": "Counting System:",
-  "hiLo": "Hi-Lo",
-  "ko": "KO",
-  "omegaII": "Omega II",
+  "strategy": "Strategy",
+  "indexPlays": "index plays",
+  "systemName": {
+    "hi-lo": "Hi-Lo",
+    "ko": "KO",
+    "omega-ii": "Omega II",
+    "zen": "Zen",
+    "cac2": "CAC2"
+  },
+  "strategyName": {
+    "illustrious18": "Illustrious 18",
+    "ko_preferred": "KO Preferred",
+    "omega_matrix": "Omega II Matrix",
+    "zen_indices": "Zen Indices",
+    "catch22": "Catch 22"
+  },
   "changeWarningTitle": "Change Counting System?",
   "changeWarningMessage": "Changing the counting system will reset the running count and true count to zero. Continue?",
   "confirm": "Confirm",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "hiLo": "Hi-Lo",
+  "ko": "KO",
+  "omegaII": "Omega II"
 }

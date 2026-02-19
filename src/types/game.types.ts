@@ -44,11 +44,65 @@ export interface PlayerHand {
 }
 
 export interface CountingSystem {
+  /**
+   * Unique identifier for this counting system
+   * Examples: "hi-lo", "ko", "omega-ii", "zen"
+   */
+  id: string;
+
+  /**
+   * Display name
+   * Examples: "Hi-Lo", "KO", "Omega II", "Zen Count"
+   */
   name: string;
-  values: Record<string, number>; // Card rank -> count value
+
+  /**
+   * Card rank to count value mapping
+   * Examples: { '2': 1, '3': 1, ..., 'K': -1, 'A': -1 }
+   */
+  values: Record<string, number>;
+
+  /**
+   * Whether this is a balanced counting system
+   * - true: Requires true count conversion (Hi-Lo, Omega II, Zen)
+   * - false: Uses running count directly (KO)
+   */
   isBalanced: boolean;
+
+  /**
+   * Betting correlation (0-1)
+   * Higher is better for bet sizing decisions
+   */
   bettingCorrelation: number;
+
+  /**
+   * Playing efficiency (0-1)
+   * Higher is better for playing strategy decisions
+   */
   playingEfficiency: number;
+
+  /**
+   * ID of the strategy set this system is paired with
+   * Examples: "illustrious18", "ko_preferred", "omega_matrix", "zen_indices"
+   *
+   * IMPORTANT: This creates a hard lock between counting system and strategy.
+   * Hi-Lo must use Illustrious 18, KO must use KO Preferred, etc.
+   */
+  strategySetId: string;
+
+  /**
+   * Insurance decision threshold
+   * Take insurance when effective count >= this value
+   * - For balanced systems: True Count threshold
+   * - For unbalanced systems: Running Count threshold
+   *
+   * Typical values:
+   * - Hi-Lo: TC +3
+   * - KO: RC +3
+   * - Omega II: TC +6 (approximately 2x Hi-Lo)
+   * - Zen Count: TC +3
+   */
+  insuranceIndex: number;
 }
 
 export interface GameState {

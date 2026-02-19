@@ -2,9 +2,9 @@ import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGame } from '../../context/GameContext';
 import { CountingSystem } from '../../types/game.types';
-import { HI_LO, KO, OMEGA_II } from '../../constants/gameDefaults';
+import { HI_LO, KO, OMEGA_II, ZEN_COUNT, CAC2 } from '../../constants/gameDefaults';
 import { CountingSystemWarning } from './CountingSystemWarning';
-import { getTrueCount } from '../../context/gameSelectors';
+import { getEffectiveCount, getActiveStrategySet } from '../../context/gameSelectors';
 
 export function CompactCountDisplay() {
   const { t } = useTranslation('count');
@@ -14,10 +14,15 @@ export function CompactCountDisplay() {
 
   const gameInProgress = state.phase !== 'betting' || state.currentBet > 0;
 
-  // Calculate true count on-demand
-  const trueCount = useMemo(
-    () => getTrueCount(state.runningCount, state.cardsRemaining),
-    [state.runningCount, state.cardsRemaining]
+  // Get effective count and active strategy set
+  const effectiveCount = useMemo(
+    () => getEffectiveCount(state),
+    [state.runningCount, state.cardsRemaining, state.countingSystem.isBalanced]
+  );
+
+  const activeStrategySet = useMemo(
+    () => getActiveStrategySet(state),
+    [state.countingSystem.id]
   );
 
   const handleSystemSelect = (system: CountingSystem) => {
@@ -72,29 +77,42 @@ export function CompactCountDisplay() {
             display: 'flex',
             gap: '6px',
             justifyContent: 'flex-start',
+            flexWrap: 'wrap',
           }}
         >
           <button
-            style={getButtonStyle(state.countingSystem.name === 'Hi-Lo')}
+            style={getButtonStyle(state.countingSystem.id === 'hi-lo')}
             onClick={() => handleSystemSelect(HI_LO)}
           >
-            {t('hiLo')}
+            {t('systemName.hi-lo')}
           </button>
           <button
-            style={getButtonStyle(state.countingSystem.name === 'KO')}
+            style={getButtonStyle(state.countingSystem.id === 'ko')}
             onClick={() => handleSystemSelect(KO)}
           >
-            {t('ko')}
+            {t('systemName.ko')}
           </button>
           <button
-            style={getButtonStyle(state.countingSystem.name === 'Omega II')}
+            style={getButtonStyle(state.countingSystem.id === 'omega-ii')}
             onClick={() => handleSystemSelect(OMEGA_II)}
           >
-            {t('omegaII')}
+            {t('systemName.omega-ii')}
+          </button>
+          <button
+            style={getButtonStyle(state.countingSystem.id === 'zen')}
+            onClick={() => handleSystemSelect(ZEN_COUNT)}
+          >
+            {t('systemName.zen')}
+          </button>
+          <button
+            style={getButtonStyle(state.countingSystem.id === 'cac2')}
+            onClick={() => handleSystemSelect(CAC2)}
+          >
+            {t('systemName.cac2')}
           </button>
         </div>
 
-        {/* Count Display - Compact Three-Line Layout */}
+        {/* Count Display - Compact Layout */}
         <div style={{ fontSize: '13px', lineHeight: '1.4' }}>
           <div
             style={{
@@ -110,19 +128,21 @@ export function CompactCountDisplay() {
             </span>
           </div>
 
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginBottom: '2px',
-            }}
-          >
-            <span style={{ color: '#94a3b8' }}>{t('trueCount')}:</span>
-            <span style={{ color: '#06b6d4', fontWeight: 'bold' }}>
-              {trueCount > 0 ? '+' : ''}
-              {trueCount.toFixed(1)}
-            </span>
-          </div>
+          {state.countingSystem.isBalanced && (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginBottom: '2px',
+              }}
+            >
+              <span style={{ color: '#94a3b8' }}>{t('trueCount')}:</span>
+              <span style={{ color: '#06b6d4', fontWeight: 'bold' }}>
+                {effectiveCount > 0 ? '+' : ''}
+                {effectiveCount.toFixed(1)}
+              </span>
+            </div>
+          )}
 
           <div
             style={{
@@ -135,6 +155,25 @@ export function CompactCountDisplay() {
             <span style={{ color: '#6b7280' }}>
               {(state.cardsRemaining / 52).toFixed(1)}
             </span>
+          </div>
+        </div>
+
+        {/* Strategy Pairing Indicator */}
+        <div
+          style={{
+            fontSize: '11px',
+            color: '#94a3b8',
+            marginTop: '4px',
+            paddingTop: '8px',
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+          }}
+        >
+          <div style={{ marginBottom: '2px' }}>
+            <span style={{ color: '#6b7280' }}>{t('strategy')}:</span>{' '}
+            <span style={{ color: '#fbbf24' }}>{activeStrategySet.name}</span>
+          </div>
+          <div style={{ fontSize: '10px', color: '#6b7280' }}>
+            {activeStrategySet.deviations.length} {t('indexPlays')}
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGame } from '../../context/GameContext';
 import { StrategyTable } from './StrategyTable';
+import { IndexPlaysPanel } from './IndexPlaysPanel';
 import {
   getHardHandTable,
   getSoftHandTable,
@@ -250,6 +251,9 @@ export function StrategyPanel() {
           <span style={{ color: '#ef4444' }}>SU</span> = {t('legendSU', 'Surrender')}
         </div>
       </div>
+
+      {/* Index Plays Panel */}
+      <IndexPlaysPanel />
     </div>
   );
 }

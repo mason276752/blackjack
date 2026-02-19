@@ -1,5 +1,7 @@
 import { AIPlayer } from '../lib/ai/AIPlayer';
 import { BasicStrategy } from '../lib/strategy/BasicStrategy';
+import { StrategyResolver } from '../lib/strategy/StrategyResolver';
+import { ILLUSTRIOUS_18 } from '../constants/strategies/illustrious18';
 import { Card } from '../types/card.types';
 import { GameRules } from '../types/game.types';
 
@@ -34,6 +36,7 @@ const mockT = (key: string, params?: any) => {
 describe('AIPlayer', () => {
   let aiPlayer: AIPlayer;
   let strategy: BasicStrategy;
+  let strategyResolver: StrategyResolver;
   let rules: GameRules;
 
   beforeEach(() => {
@@ -51,12 +54,13 @@ describe('AIPlayer', () => {
       doubleOn: 'any',
     };
     strategy = new BasicStrategy(rules);
-    aiPlayer = new AIPlayer(strategy, mockT as any);
+    strategyResolver = new StrategyResolver(ILLUSTRIOUS_18);
+    aiPlayer = new AIPlayer(strategy, strategyResolver, mockT as any);
   });
 
   describe('decideInsurance', () => {
     it('should take insurance when true count >= +3', () => {
-      const decision = aiPlayer.decideInsurance(3.0, 50, 1000);
+      const decision = aiPlayer.decideInsurance(3.0, 3, 50, 1000);
 
       expect(decision.action).toBe('take_insurance');
       expect(decision.reasoning).toContain('True Count +3.0');
@@ -65,7 +69,7 @@ describe('AIPlayer', () => {
     });
 
     it('should take insurance when true count > +3', () => {
-      const decision = aiPlayer.decideInsurance(4.5, 50, 1000);
+      const decision = aiPlayer.decideInsurance(4.5, 3, 50, 1000);
 
       expect(decision.action).toBe('take_insurance');
       expect(decision.reasoning).toContain('True Count +4.5');
@@ -73,7 +77,7 @@ describe('AIPlayer', () => {
     });
 
     it('should decline insurance when true count < +3', () => {
-      const decision = aiPlayer.decideInsurance(2.5, 50, 1000);
+      const decision = aiPlayer.decideInsurance(2.5, 3, 50, 1000);
 
       expect(decision.action).toBe('decline_insurance');
       expect(decision.reasoning).toContain('True Count 2.5');
@@ -82,7 +86,7 @@ describe('AIPlayer', () => {
     });
 
     it('should decline insurance when true count is negative', () => {
-      const decision = aiPlayer.decideInsurance(-1.0, 50, 1000);
+      const decision = aiPlayer.decideInsurance(-1.0, 3, 50, 1000);
 
       expect(decision.action).toBe('decline_insurance');
       expect(decision.reasoning).toContain('True Count -1.0');
@@ -90,14 +94,14 @@ describe('AIPlayer', () => {
     });
 
     it('should decline insurance when true count is zero', () => {
-      const decision = aiPlayer.decideInsurance(0, 50, 1000);
+      const decision = aiPlayer.decideInsurance(0, 3, 50, 1000);
 
       expect(decision.action).toBe('decline_insurance');
       expect(decision.reasoning).toContain('True Count 0.0');
     });
 
     it('should decline insurance when balance insufficient even if count favors it', () => {
-      const decision = aiPlayer.decideInsurance(4.0, 100, 50);
+      const decision = aiPlayer.decideInsurance(4.0, 3, 100, 50);
 
       expect(decision.action).toBe('decline_insurance');
       expect(decision.reasoning).toContain('True Count +4.0');
@@ -105,7 +109,7 @@ describe('AIPlayer', () => {
     });
 
     it('should take insurance when balance exactly equals insurance amount', () => {
-      const decision = aiPlayer.decideInsurance(3.5, 100, 100);
+      const decision = aiPlayer.decideInsurance(3.5, 3, 100, 100);
 
       expect(decision.action).toBe('take_insurance');
       expect(decision.insuranceAmount).toBe(100);

@@ -1,4 +1,7 @@
-import { GameRules, CountingSystem } from '../types/game.types';
+import { GameRules } from '../types/game.types';
+
+// Re-export counting systems from the new centralized location
+export { HI_LO, KO, OMEGA_II, ZEN_COUNT, CAC2, ALL_COUNTING_SYSTEMS } from './countingSystems';
 
 // Default Vegas Strip rules
 export const VEGAS_STRIP_RULES: GameRules = {
@@ -43,47 +46,6 @@ export const ATLANTIC_CITY_RULES: GameRules = {
   canHitSplitAces: false,
   insuranceAllowed: true,
   doubleOn: 'any',
-};
-
-// Hi-Lo counting system (most popular)
-export const HI_LO: CountingSystem = {
-  name: 'Hi-Lo',
-  values: {
-    '2': 1, '3': 1, '4': 1, '5': 1, '6': 1,
-    '7': 0, '8': 0, '9': 0,
-    '10': -1, 'J': -1, 'Q': -1, 'K': -1, 'A': -1,
-  },
-  isBalanced: true,
-  bettingCorrelation: 0.97,
-  playingEfficiency: 0.51,
-};
-
-// KO (Knock-Out) counting system
-export const KO: CountingSystem = {
-  name: 'KO',
-  values: {
-    '2': 1, '3': 1, '4': 1, '5': 1, '6': 1, '7': 1,
-    '8': 0, '9': 0,
-    '10': -1, 'J': -1, 'Q': -1, 'K': -1, 'A': -1,
-  },
-  isBalanced: false,
-  bettingCorrelation: 0.98,
-  playingEfficiency: 0.55,
-};
-
-// Omega II counting system (advanced)
-export const OMEGA_II: CountingSystem = {
-  name: 'Omega II',
-  values: {
-    '2': 1, '3': 1, '7': 1,
-    '4': 2, '5': 2, '6': 2,
-    '8': 0, 'A': 0,
-    '9': -1,
-    '10': -2, 'J': -2, 'Q': -2, 'K': -2,
-  },
-  isBalanced: true,
-  bettingCorrelation: 0.99,
-  playingEfficiency: 0.67,
 };
 
 export const DEFAULT_STARTING_BALANCE = 25000;

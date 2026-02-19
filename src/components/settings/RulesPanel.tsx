@@ -37,39 +37,53 @@ export function RulesPanel() {
     if (isLocked) return;
 
     setSelectedPreset(preset);
+    let newRules: GameRules;
+
     if (preset === 'vegas') {
-      setCustomRules(VEGAS_STRIP_RULES);
+      newRules = VEGAS_STRIP_RULES;
     } else if (preset === 'single') {
-      setCustomRules(SINGLE_DECK_RULES);
+      newRules = SINGLE_DECK_RULES;
     } else if (preset === 'atlantic') {
-      setCustomRules(ATLANTIC_CITY_RULES);
+      newRules = ATLANTIC_CITY_RULES;
+    } else {
+      // For 'custom', keep current customRules
+      return;
     }
-    // For 'custom', keep current customRules
+
+    setCustomRules(newRules);
+    // Auto-apply preset rules immediately
+    applyRulesChange(newRules);
   };
 
   const handleRuleChange = (field: keyof GameRules, value: any) => {
     if (isLocked) return;
 
-    setCustomRules((prev) => ({
-      ...prev,
+    const newRules = {
+      ...customRules,
       [field]: value,
-    }));
+    };
+
+    setCustomRules(newRules);
+
     // Automatically switch to custom mode when user modifies any rule
     if (selectedPreset !== 'custom') {
       setSelectedPreset('custom');
     }
+
+    // Auto-apply rule change immediately
+    applyRulesChange(newRules);
   };
 
-  const handleApplyRules = () => {
-    if (isLocked) return;
-
-    const rulesChanged = JSON.stringify(customRules) !== JSON.stringify(state.rules);
+  const applyRulesChange = (newRules: GameRules) => {
+    const rulesChanged = JSON.stringify(newRules) !== JSON.stringify(state.rules);
     const gameInProgress = state.phase !== 'betting' || state.currentBet > 0;
 
     if (rulesChanged && gameInProgress) {
+      // Save pending rules for confirmation
+      setCustomRules(newRules);
       setShowConfirm(true);
     } else if (rulesChanged) {
-      dispatch({ type: 'SET_RULES', rules: customRules });
+      dispatch({ type: 'SET_RULES', rules: newRules });
     }
   };
 
@@ -116,21 +130,6 @@ export function RulesPanel() {
     marginTop: '4px',
   };
 
-  const applyButtonStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '12px',
-    backgroundColor: isLocked ? '#6b7280' : '#22c55e',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    cursor: isLocked ? 'not-allowed' : 'pointer',
-    marginTop: '20px',
-    opacity: isLocked ? 0.5 : 1,
-    transition: 'all 0.3s ease',
-  };
-
   return (
     <>
       <div style={containerStyle}>
@@ -158,14 +157,6 @@ export function RulesPanel() {
           onChange={handleRuleChange}
           disabled={isLocked || selectedPreset !== 'custom'}
         />
-
-        <button
-          style={applyButtonStyle}
-          onClick={handleApplyRules}
-          disabled={isLocked}
-        >
-          {t('applyChanges', 'Apply Changes')}
-        </button>
       </div>
 
       <ConfirmModal

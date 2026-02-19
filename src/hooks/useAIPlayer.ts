@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useGame } from '../context/GameContext';
 import { useGameLogic } from './useGameLogic';
 import { AIPlayer, AIDecision } from '../lib/ai/AIPlayer';
+import { StrategyResolver } from '../lib/strategy/StrategyResolver';
 import { useInterval } from './useInterval';
-import { getTrueCount } from '../context/gameSelectors';
+import { getEffectiveCount, getActiveStrategySet } from '../context/gameSelectors';
 
 // AI phase state machine types
 type AIPhase =
@@ -81,10 +82,28 @@ export function useAIPlayer() {
     aiStateRef.current = aiState;
   }, [aiState]);
 
-  // Create AIPlayer instance (strategy from context, with i18n)
+  // Get active strategy set for current counting system
+  const strategySet = useMemo(
+    () => getActiveStrategySet(state),
+    [state.countingSystem.id]
+  );
+
+  // Create StrategyResolver with the paired strategy set
+  const strategyResolver = useMemo(
+    () => new StrategyResolver(strategySet),
+    [strategySet]
+  );
+
+  // Create AIPlayer instance with strategy resolver
   const aiPlayer = useMemo(
-    () => new AIPlayer(strategy, t),
-    [strategy, t]
+    () => new AIPlayer(strategy, strategyResolver, t),
+    [strategy, strategyResolver, t]
+  );
+
+  // Get effective count (TC for balanced systems, RC for unbalanced)
+  const effectiveCount = useMemo(
+    () => getEffectiveCount(state),
+    [state.runningCount, state.cardsRemaining, state.countingSystem.isBalanced]
   );
 
   // Debug logging helper
@@ -280,8 +299,7 @@ export function useAIPlayer() {
   }, [logAIState, state.currentBet, state.phase, transitionToPhase]);
 
   const handlePlacingBetPhase = useCallback(() => {
-    const trueCount = getTrueCount(state.runningCount, state.cardsRemaining);
-    const decision = aiPlayer.calculateBet(state.balance, trueCount, 25, 5000);
+    const decision = aiPlayer.calculateBet(state.balance, effectiveCount, 25, 5000);
 
     setAIState(prev => ({ ...prev, currentDecision: decision }));
     dispatch({ type: 'PLACE_BET', amount: decision.betAmount! });
@@ -289,7 +307,7 @@ export function useAIPlayer() {
 
     logAIState('Placed bet', { amount: decision.betAmount });
     transitionToPhase('dealing_cards');
-  }, [aiPlayer, dispatch, logAIState, setAIState, state.balance, state.runningCount, state.cardsRemaining, transitionToPhase, updateStatistics]);
+  }, [aiPlayer, dispatch, effectiveCount, logAIState, setAIState, state.balance, transitionToPhase, updateStatistics]);
 
   const handleDealingCardsPhase = useCallback(() => {
     if (state.currentBet === 0) {
@@ -332,15 +350,20 @@ export function useAIPlayer() {
   const handleInsuranceDecisionPhase = useCallback(() => {
     // Calculate insurance parameters
     const maxInsurance = state.currentBet / 2; // Insurance is half of original bet
-    const trueCount = getTrueCount(state.runningCount, state.cardsRemaining);
 
-    // Get AI decision
-    const decision = aiPlayer.decideInsurance(trueCount, maxInsurance, state.balance);
+    // Get AI decision using system-specific insurance index
+    const decision = aiPlayer.decideInsurance(
+      effectiveCount,
+      state.countingSystem.insuranceIndex,
+      maxInsurance,
+      state.balance
+    );
 
     setAIState(prev => ({ ...prev, currentDecision: decision }));
     logAIState('Insurance decision', {
       action: decision.action,
-      trueCount,
+      effectiveCount,
+      insuranceIndex: state.countingSystem.insuranceIndex,
       maxInsurance,
       balance: state.balance,
     });
@@ -354,7 +377,7 @@ export function useAIPlayer() {
 
     // Continue to next phase (player turn will start)
     transitionToPhase('deciding_action');
-  }, [aiPlayer, dispatch, logAIState, setAIState, state.balance, state.cardsRemaining, state.currentBet, state.runningCount, transitionToPhase]);
+  }, [aiPlayer, dispatch, effectiveCount, logAIState, setAIState, state.balance, state.countingSystem.insuranceIndex, state.currentBet, transitionToPhase]);
 
   const handleDecidingActionPhase = useCallback(() => {
     // DEFENSIVE VALIDATION
@@ -405,16 +428,14 @@ export function useAIPlayer() {
       currentHand.cards.length === 2 &&
       state.activeHandIndex === 0;  // Only first hand
 
-    // Get true count for Illustrious 18 deviations
-    const trueCount = getTrueCount(state.runningCount, state.cardsRemaining);
-
+    // Use effective count for strategy deviations
     const decision = aiPlayer.decideAction(
       currentHand,
       dealerUpCard,
       canDouble,
       canSplit,
       canSurrender,
-      trueCount  // Pass true count for Illustrious 18 deviations
+      effectiveCount  // Pass effective count for strategy deviations
     );
 
     setAIState(prev => ({ ...prev, currentDecision: decision }));
@@ -441,7 +462,7 @@ export function useAIPlayer() {
 
     updateStatistics('decision');
     // Stay in same phase - will check again next iteration
-  }, [aiPlayer, gameLogic, logAIState, setAIState, state, updateStatistics]);
+  }, [aiPlayer, effectiveCount, gameLogic, logAIState, setAIState, state, updateStatistics]);
 
   const handleWaitingDealerPhase = useCallback(() => {
     if (state.phase === 'resolution') {

@@ -1,8 +1,10 @@
 import { AIPlayer } from '../lib/ai/AIPlayer';
 import { BasicStrategy } from '../lib/strategy/BasicStrategy';
+import { StrategyResolver } from '../lib/strategy/StrategyResolver';
 import { Card } from '../types/card.types';
 import { GameRules } from '../types/game.types';
-import { ILLUSTRIOUS_18, findDeviation, shouldDeviate } from '../constants/illustrious18';
+import { ILLUSTRIOUS_18 as ILLUSTRIOUS_18_OLD, findDeviation, shouldDeviate } from '../constants/illustrious18';
+import { ILLUSTRIOUS_18 as ILLUSTRIOUS_18_NEW } from '../constants/strategies/illustrious18';
 
 // Mock translation function for tests - simulates i18next behavior
 const mockTranslations: Record<string, string> = {
@@ -35,6 +37,7 @@ const mockT = (key: string, params?: any) => {
 describe('Illustrious 18', () => {
   let aiPlayer: AIPlayer;
   let strategy: BasicStrategy;
+  let strategyResolver: StrategyResolver;
   let rules: GameRules;
 
   beforeEach(() => {
@@ -52,7 +55,8 @@ describe('Illustrious 18', () => {
       doubleOn: 'any',
     };
     strategy = new BasicStrategy(rules);
-    aiPlayer = new AIPlayer(strategy, mockT as any);
+    strategyResolver = new StrategyResolver(ILLUSTRIOUS_18_NEW);
+    aiPlayer = new AIPlayer(strategy, strategyResolver, mockT as any);
   });
 
   const createCard = (rank: string): Card => ({
@@ -83,14 +87,14 @@ describe('Illustrious 18', () => {
     });
 
     it('should deviate when TC >= threshold (positive)', () => {
-      const deviation = ILLUSTRIOUS_18.find(d => d.hand === '12' && d.dealer === '3');
+      const deviation = ILLUSTRIOUS_18_OLD.find(d => d.hand === '12' && d.dealer === '3');
       expect(shouldDeviate(deviation!, 2)).toBe(true);  // TC = 2, threshold = 2
       expect(shouldDeviate(deviation!, 3)).toBe(true);  // TC > threshold
       expect(shouldDeviate(deviation!, 1)).toBe(false); // TC < threshold
     });
 
     it('should deviate when TC <= threshold (negative)', () => {
-      const deviation = ILLUSTRIOUS_18.find(d => d.hand === '13' && d.dealer === '2');
+      const deviation = ILLUSTRIOUS_18_OLD.find(d => d.hand === '13' && d.dealer === '2');
       expect(shouldDeviate(deviation!, -1)).toBe(true);  // TC = -1, threshold = -1
       expect(shouldDeviate(deviation!, -2)).toBe(true);  // TC < threshold
       expect(shouldDeviate(deviation!, 0)).toBe(false);  // TC > threshold
@@ -401,7 +405,7 @@ describe('Illustrious 18', () => {
 
   describe('Insurance (I18 #1) - already tested', () => {
     it('should take insurance at TC +3 or higher', () => {
-      const decision = aiPlayer.decideInsurance(3.0, 50, 1000);
+      const decision = aiPlayer.decideInsurance(3.0, 3, 50, 1000);
       expect(decision.action).toBe('take_insurance');
     });
   });

@@ -1,8 +1,8 @@
-import { PlayerHand, GameRules, StrategyAction } from '../../types/game.types';
+import { PlayerHand, StrategyAction } from '../../types/game.types';
 import { Card } from '../../types/card.types';
 import { BasicStrategy } from '../strategy/BasicStrategy';
+import { StrategyResolver } from '../strategy/StrategyResolver';
 import { getDealerDisplayValue, normalizeRank } from '../utils/cardHelpers';
-import { findDeviation, shouldDeviate } from '../../constants/illustrious18';
 import { isPair as checkIsPair } from '../deck/Card';
 import { TFunction } from 'i18next';
 
@@ -16,31 +16,35 @@ export interface AIDecision {
 export class AIPlayer {
   constructor(
     private strategy: BasicStrategy,
+    private strategyResolver: StrategyResolver,
     private t: TFunction
   ) {}
 
   /**
    * Calculates optimal bet using practical bet spread (1-12 units)
    * This matches real-world card counting better than pure Kelly Criterion
+   *
+   * Note: Bet sizing typically uses true count even for unbalanced systems like KO,
+   * as it normalizes the advantage across different deck penetrations.
    */
   calculateBet(
     balance: number,
-    trueCount: number,
+    effectiveCount: number,
     minBet: number,
     maxBet: number
   ): AIDecision {
-    // Practical bet spread based on true count
+    // Practical bet spread based on effective count
     let units: number;
-    if (trueCount < 1) {
-      units = 1;       // TC 0 or less: 1 unit (neutral/negative count)
-    } else if (trueCount < 2) {
-      units = 2;       // TC +1: 2 units
-    } else if (trueCount < 3) {
-      units = 4;       // TC +2: 4 units
-    } else if (trueCount < 4) {
-      units = 8;       // TC +3: 8 units
+    if (effectiveCount < 1) {
+      units = 1;       // Count 0 or less: 1 unit (neutral/negative count)
+    } else if (effectiveCount < 2) {
+      units = 2;       // Count +1: 2 units
+    } else if (effectiveCount < 3) {
+      units = 4;       // Count +2: 4 units
+    } else if (effectiveCount < 4) {
+      units = 8;       // Count +3: 8 units
     } else {
-      units = 12;      // TC +4+: 12 units (max spread)
+      units = 12;      // Count +4+: 12 units (max spread)
     }
 
     let betAmount = minBet * units;
@@ -51,29 +55,37 @@ export class AIPlayer {
       betAmount = Math.max(minBet, Math.min(balance, maxBet));
     }
 
-    const reasoning = this.generateBetReasoning(trueCount, units, betAmount);
+    const reasoning = this.generateBetReasoning(effectiveCount, units, betAmount);
     return { action: 'bet', betAmount, reasoning };
   }
 
   /**
-   * Decides whether to take insurance based on true count
-   * Standard strategy: Take insurance when True Count >= +3
+   * Decides whether to take insurance based on effective count and system-specific threshold
+   *
+   * Different counting systems have different optimal insurance thresholds:
+   * - Hi-Lo: TC +3
+   * - KO: RC +3
+   * - Omega II: TC +6 (higher due to multi-level counting)
+   * - Zen Count: TC +3
    */
   decideInsurance(
-    trueCount: number,
+    effectiveCount: number,
+    insuranceIndex: number,
     maxInsuranceAmount: number,
     balance: number
   ): AIDecision {
-    // Insurance is mathematically favorable when TC >= +3
-    // At TC +3, the deck has enough 10-value cards to make insurance +EV
-    const shouldTakeInsurance = trueCount >= 3;
+    // Use StrategyResolver to determine if insurance should be taken
+    const shouldTakeInsurance = this.strategyResolver.shouldTakeInsurance(
+      effectiveCount,
+      insuranceIndex
+    );
 
     // Check if we have enough balance
     if (shouldTakeInsurance && balance < maxInsuranceAmount) {
       return {
         action: 'decline_insurance',
         reasoning: this.t('ai:reasoning.insurance.insufficientBalance', {
-          trueCount: trueCount.toFixed(1)
+          trueCount: effectiveCount.toFixed(1)
         }),
       };
     }
@@ -82,7 +94,7 @@ export class AIPlayer {
       return {
         action: 'take_insurance',
         reasoning: this.t('ai:reasoning.insurance.takeInsurance', {
-          trueCount: trueCount.toFixed(1)
+          trueCount: effectiveCount.toFixed(1)
         }),
         insuranceAmount: maxInsuranceAmount,
       };
@@ -90,14 +102,17 @@ export class AIPlayer {
       return {
         action: 'decline_insurance',
         reasoning: this.t('ai:reasoning.insurance.declineInsurance', {
-          trueCount: trueCount.toFixed(1)
+          trueCount: effectiveCount.toFixed(1)
         }),
       };
     }
   }
 
   /**
-   * Decides optimal play action using BasicStrategy with Illustrious 18 deviations
+   * Decides optimal play action using BasicStrategy with strategy deviations
+   *
+   * Uses the StrategyResolver to apply count-based deviations from the paired strategy set.
+   * Each counting system has its own dedicated strategy set (e.g., Hi-Lo uses Illustrious 18).
    */
   decideAction(
     hand: PlayerHand,
@@ -105,7 +120,7 @@ export class AIPlayer {
     canDouble: boolean,
     canSplit: boolean,
     canSurrender: boolean,
-    trueCount?: number  // Optional: if provided, check for Illustrious 18 deviations
+    effectiveCount?: number  // Optional: if provided, check for strategy deviations
   ): AIDecision {
     // Get basic strategy action first
     const basicAction = this.strategy.getOptimalAction(
@@ -116,19 +131,24 @@ export class AIPlayer {
       canSurrender        // Pass boolean, not rules
     );
 
-    // If true count is provided, check for Illustrious 18 deviations
+    // If effective count is provided, check for strategy deviations
     let optimalAction = basicAction;
     let deviationApplied = false;
     let deviationDescription = '';
 
-    if (trueCount !== undefined) {
-      const dealerValue = normalizeRank(dealerUpCard.rank as any);
+    if (effectiveCount !== undefined) {
       const isPair = checkIsPair(hand.cards);
       const pairValue = isPair ? normalizeRank(hand.cards[0].rank as any) : undefined;
 
-      const deviation = findDeviation(hand.value, dealerValue, isPair, pairValue);
+      // Use StrategyResolver to find applicable deviation
+      const deviation = this.strategyResolver.findDeviation(
+        hand.value,
+        dealerUpCard,
+        isPair,
+        pairValue
+      );
 
-      if (deviation && shouldDeviate(deviation, trueCount)) {
+      if (deviation && this.strategyResolver.shouldDeviate(deviation, effectiveCount)) {
         // Check if deviation action is available
         const deviationActionAvailable = this.isActionAvailable(
           deviation.deviationAction,
@@ -186,7 +206,7 @@ export class AIPlayer {
       action,
       deviationApplied,
       deviationDescription,
-      trueCount
+      effectiveCount
     );
     return { action, reasoning };
   }
@@ -213,16 +233,16 @@ export class AIPlayer {
     return true;
   }
 
-  private generateBetReasoning(trueCount: number, units: number, betAmount: number): string {
+  private generateBetReasoning(effectiveCount: number, units: number, betAmount: number): string {
     const countDescKey =
-      trueCount >= 2 ? 'favorable' :
-      trueCount <= 0 ? 'unfavorable' :
+      effectiveCount >= 2 ? 'favorable' :
+      effectiveCount <= 0 ? 'unfavorable' :
       'neutral';
 
     const countDesc = this.t(`ai:reasoning.bet.${countDescKey}`);
 
     return this.t('ai:reasoning.bet.template', {
-      trueCount: trueCount.toFixed(1),
+      trueCount: effectiveCount.toFixed(1),
       countDesc,
       units,
       betAmount
@@ -236,7 +256,7 @@ export class AIPlayer {
     action: string,
     deviationApplied: boolean = false,
     deviationDescription: string = '',
-    trueCount?: number
+    effectiveCount?: number
   ): string {
     const handTypeKey = hand.cards.some(c => c.rank === 'A') && hand.value <= 21 && hand.cards.length === 2
       ? 'soft'
@@ -254,11 +274,11 @@ export class AIPlayer {
       action: actionDisplay
     });
 
-    // If Illustrious 18 deviation was applied, add explanation
-    if (deviationApplied && trueCount !== undefined) {
+    // If strategy deviation was applied, add explanation
+    if (deviationApplied && effectiveCount !== undefined) {
       return this.t('ai:reasoning.action.deviationTemplate', {
         baseReasoning,
-        trueCount: trueCount.toFixed(1),
+        trueCount: effectiveCount.toFixed(1),
         deviationDescription
       });
     }

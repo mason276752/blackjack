@@ -6,11 +6,27 @@
   "showCardCount": "顯示算牌",
   "hideCardCount": "隱藏算牌",
   "systemSelector": "算牌系統：",
-  "hiLo": "Hi-Lo",
-  "ko": "KO",
-  "omegaII": "Omega II",
+  "strategy": "策略",
+  "indexPlays": "個索引",
+  "systemName": {
+    "hi-lo": "Hi-Lo",
+    "ko": "KO",
+    "omega-ii": "Omega II",
+    "zen": "Zen",
+    "cac2": "CAC2"
+  },
+  "strategyName": {
+    "illustrious18": "Illustrious 18",
+    "ko_preferred": "KO Preferred",
+    "omega_matrix": "Omega II Matrix",
+    "zen_indices": "Zen 索引",
+    "catch22": "Catch 22"
+  },
   "changeWarningTitle": "更改算牌系統？",
   "changeWarningMessage": "更改算牌系統將重置流水計數和真實計數至零。是否繼續？",
   "confirm": "確認",
-  "cancel": "取消"
+  "cancel": "取消",
+  "hiLo": "Hi-Lo",
+  "ko": "KO",
+  "omegaII": "Omega II"
 }

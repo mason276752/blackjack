@@ -20,5 +20,18 @@
   "legendS": "停牌",
   "legendD": "加倍",
   "legendSP": "分牌",
-  "legendSU": "投降"
+  "legendSU": "投降",
+  "indexPlaysTitle": "索引表",
+  "indexPlaysSystem": "系統",
+  "indexHand": "手牌",
+  "indexDealer": "莊家",
+  "indexBasic": "基本",
+  "indexDeviation": "偏差",
+  "indexThreshold": "閾值",
+  "indexDescription": "說明",
+  "indexCategoryInsurance": "保險",
+  "indexCategoryStanding": "停牌偏差",
+  "indexCategoryDoubling": "加倍偏差",
+  "indexCategorySplitting": "分牌偏差",
+  "indexCategoryOther": "其他偏差"
 }

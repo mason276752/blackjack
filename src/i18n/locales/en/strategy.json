@@ -20,5 +20,18 @@
   "legendS": "Stand",
   "legendD": "Double",
   "legendSP": "Split",
-  "legendSU": "Surrender"
+  "legendSU": "Surrender",
+  "indexPlaysTitle": "Index Plays",
+  "indexPlaysSystem": "System",
+  "indexHand": "Hand",
+  "indexDealer": "Dealer",
+  "indexBasic": "Basic",
+  "indexDeviation": "Deviation",
+  "indexThreshold": "Threshold",
+  "indexDescription": "Description",
+  "indexCategoryInsurance": "Insurance",
+  "indexCategoryStanding": "Standing Deviations",
+  "indexCategoryDoubling": "Doubling Deviations",
+  "indexCategorySplitting": "Splitting Deviations",
+  "indexCategoryOther": "Other Deviations"
 }
