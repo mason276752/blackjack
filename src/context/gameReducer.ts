@@ -540,14 +540,25 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
         totalPayout += payoutResult.payout;
 
+        // Count wins (including blackjack)
         if (payoutResult.result === 'win') handsWon++;
-        if (payoutResult.result === 'lose') handsLost++;
-        if (payoutResult.result === 'push') handsPushed++;
         if (payoutResult.result === 'blackjack') {
           blackjacks++;
           handsWon++;
         }
-        if (payoutResult.result === 'bust') busts++;
+
+        // Count losses (including bust and surrender)
+        if (payoutResult.result === 'lose') handsLost++;
+        if (payoutResult.result === 'bust') {
+          busts++;
+          handsLost++;
+        }
+        if (payoutResult.result === 'surrender') {
+          handsLost++;
+        }
+
+        // Count pushes
+        if (payoutResult.result === 'push') handsPushed++;
 
         return {
           ...hand,
