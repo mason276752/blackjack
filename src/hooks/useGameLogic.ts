@@ -5,6 +5,21 @@ import { HandEvaluator } from '../lib/hand/HandEvaluator';
 export function useGameLogic() {
   const { state, dispatch, shoe, dealerAI } = useGame();
 
+  // Check localStorage for AI speed (set by AIControlPanel)
+  const getAISpeed = () => {
+    try {
+      const speed = localStorage.getItem('ai_dealer_speed');
+      return speed ? parseInt(speed, 10) : null;
+    } catch {
+      return null;
+    }
+  };
+
+  // Use AI speed for dealer delays, or default to 500ms for manual play
+  const aiSpeed = getAISpeed();
+  const cardDelay = aiSpeed !== null ? Math.max(50, aiSpeed) : 500;
+  const resolveDelay = aiSpeed !== null ? Math.max(50, Math.floor(aiSpeed * 0.6)) : 300;
+
   const dealCards = useCallback(() => {
     if (state.currentBet === 0) {
       dispatch({ type: 'SET_MESSAGE', message: 'Please place a bet first' });
@@ -126,9 +141,9 @@ export function useGameLogic() {
                   dealerValue,
                   dealerBlackjack: HandEvaluator.isBlackjack(state.dealerHand),
                 });
-              }, 300);
+              }, resolveDelay);
             }
-          }, 500);
+          }, cardDelay);
         } else {
           // Dealer stands
           dispatch({ type: 'DEALER_STAND' });
@@ -145,13 +160,13 @@ export function useGameLogic() {
               dealerValue,
               dealerBlackjack: HandEvaluator.isBlackjack(state.dealerHand),
             });
-          }, 300);
+          }, resolveDelay);
         }
       };
 
       playNext();
-    }, 500);
-  }, [state.dealerHand, dispatch, shoe, dealerAI]);
+    }, cardDelay);
+  }, [state.dealerHand, dispatch, shoe, dealerAI, cardDelay, resolveDelay]);
 
   const newRound = useCallback(() => {
     dispatch({ type: 'COMPLETE_ROUND' });

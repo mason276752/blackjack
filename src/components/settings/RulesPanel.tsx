@@ -7,12 +7,17 @@ import { PresetSelector, PresetType } from './PresetSelector';
 import { CustomRulesForm } from './CustomRulesForm';
 import { ConfirmModal } from './ConfirmModal';
 import { HouseEdgeCalculator } from '../../lib/strategy/HouseEdgeCalculator';
+import { saveSelectedPreset, loadSelectedPreset } from '../../lib/storage/gameStorage';
 
 export function RulesPanel() {
   const { t } = useTranslation('rules');
   const { state, dispatch } = useGame();
 
-  const [selectedPreset, setSelectedPreset] = useState<PresetType>('vegas');
+  // Load saved preset or default to 'vegas'
+  const [selectedPreset, setSelectedPreset] = useState<PresetType>(() => {
+    const saved = loadSelectedPreset();
+    return saved || 'vegas';
+  });
   const [customRules, setCustomRules] = useState<GameRules>(state.rules);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -22,7 +27,15 @@ export function RulesPanel() {
   // Initialize customRules from current state rules
   useEffect(() => {
     setCustomRules(state.rules);
-    // Determine which preset is currently selected based on current rules
+
+    // Only auto-detect preset on initial load, not when selectedPreset is already set to 'custom'
+    const savedPreset = loadSelectedPreset();
+    if (savedPreset === 'custom') {
+      // User explicitly chose custom, keep it as custom even if rules match a preset
+      return;
+    }
+
+    // Auto-detect which preset matches current rules
     if (JSON.stringify(state.rules) === JSON.stringify(VEGAS_STRIP_RULES)) {
       setSelectedPreset('vegas');
     } else if (JSON.stringify(state.rules) === JSON.stringify(SINGLE_DECK_RULES)) {
@@ -33,6 +46,11 @@ export function RulesPanel() {
       setSelectedPreset('custom');
     }
   }, [state.rules]);
+
+  // Save selectedPreset to localStorage whenever it changes
+  useEffect(() => {
+    saveSelectedPreset(selectedPreset);
+  }, [selectedPreset]);
 
   const handlePresetSelect = (preset: PresetType) => {
     if (isLocked) return;

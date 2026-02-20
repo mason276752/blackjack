@@ -43,6 +43,10 @@ export function createInitialState(): GameState {
       correctPlays: 0,
       incorrectPlays: 0,
     },
+    balanceHistory: {
+      snapshots: [],
+      maxSize: 1000,
+    },
     runningCount: 0,
     countingSystem: HI_LO,
     showStrategyHint: true,
@@ -552,22 +556,43 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         };
       });
 
+      // Calculate new balance
+      const newBalance = state.balance + totalPayout;
+      const newHandNumber = state.statistics.handsPlayed + 1;
+
+      // Create balance snapshot
+      const newSnapshot = {
+        balance: newBalance,
+        timestamp: Date.now(),
+        handNumber: newHandNumber,
+      };
+
+      // Keep only last 1000 snapshots
+      const updatedSnapshots = [
+        ...state.balanceHistory.snapshots,
+        newSnapshot,
+      ].slice(-1000);
+
       return {
         ...state,
         hands: resolvedHands,
-        balance: state.balance + totalPayout,
+        balance: newBalance,
         phase: 'resolution',
+        balanceHistory: {
+          ...state.balanceHistory,
+          snapshots: updatedSnapshots,
+        },
         statistics: {
           ...state.statistics,
-          handsPlayed: state.statistics.handsPlayed + 1,
+          handsPlayed: newHandNumber,
           handsWon: state.statistics.handsWon + handsWon,
           handsLost: state.statistics.handsLost + handsLost,
           handsPushed: state.statistics.handsPushed + handsPushed,
           blackjacks: state.statistics.blackjacks + blackjacks,
           busts: state.statistics.busts + busts,
           totalWon: state.statistics.totalWon + totalPayout,
-          currentBalance: state.balance + totalPayout,
-          netProfit: (state.balance + totalPayout) - state.statistics.startingBalance,
+          currentBalance: newBalance,
+          netProfit: newBalance - state.statistics.startingBalance,
         },
         message: 'roundComplete',
       };

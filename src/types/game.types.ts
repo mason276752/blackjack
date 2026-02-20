@@ -105,6 +105,23 @@ export interface CountingSystem {
   insuranceIndex: number;
 }
 
+/**
+ * Balance snapshot - single balance record point
+ */
+export interface BalanceSnapshot {
+  balance: number;        // Balance at this point
+  timestamp: number;      // Unix timestamp (milliseconds)
+  handNumber: number;     // Which hand number
+}
+
+/**
+ * Balance history - keeps up to 1000 snapshots
+ */
+export interface BalanceHistory {
+  snapshots: BalanceSnapshot[];
+  maxSize: number;  // 1000
+}
+
 export interface GameState {
   // Game phase
   phase: GamePhase;
@@ -132,6 +149,9 @@ export interface GameState {
 
   // Statistics
   statistics: SessionStats;
+
+  // Balance history tracking
+  balanceHistory: BalanceHistory;
 
   // Card counting
   runningCount: number;

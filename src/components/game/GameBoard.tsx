@@ -18,6 +18,7 @@ import { HeaderCard } from '../layout/HeaderCard';
 import { AIControlPanel } from '../ai/AIControlPanel';
 import { ErrorBoundary } from '../common/ErrorBoundary';
 import { Button } from '../common/Button';
+import { BalanceChartModal } from '../charts/BalanceChartModal';
 import { theme } from '../../styles';
 
 export function GameBoard() {
@@ -26,6 +27,7 @@ export function GameBoard() {
   const { playDealerHand, newRound, dealCards } = useGameLogic();
   const dealerPlayingRef = useRef(false);
   const [selectedChip, setSelectedChip] = useState(25);
+  const [showBalanceChart, setShowBalanceChart] = useState(false);
 
   // Auto-play dealer turn (防止雙重執行)
   useEffect(() => {
@@ -77,6 +79,13 @@ export function GameBoard() {
         controlsContent={
           <>
             <CompactStatsDisplay />
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => setShowBalanceChart(true)}
+            >
+              📊 {t('common:viewChart')}
+            </Button>
             <LanguageSwitcher />
           </>
         }
@@ -217,6 +226,14 @@ export function GameBoard() {
         </div>
       </ErrorBoundary>
       </GameLayout>
+
+      {/* Balance Chart Modal */}
+      <BalanceChartModal
+        isOpen={showBalanceChart}
+        onClose={() => setShowBalanceChart(false)}
+        balanceHistory={state.balanceHistory}
+        currentBalance={state.balance}
+      />
     </div>
   );
 }

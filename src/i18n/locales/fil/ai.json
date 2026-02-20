@@ -11,6 +11,7 @@
   "roundsPlayed": "Rounds Played",
   "decisionsCount": "Decisions Made",
   "avgBetSize": "Avg Bet Size",
+  "resetStats": "Reset Statistics",
   "errorDetected": "Error Detected",
   "retry": "Retry",
   "waitingForDecision": "Waiting for next decision...",

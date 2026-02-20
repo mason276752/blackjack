@@ -32,6 +32,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
           currentBalance: savedData.balance,
         },
         countingSystem: savedData.countingSystem,
+        balanceHistory: savedData.balanceHistory,
       };
     }
     return initial;
@@ -55,18 +56,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   // Auto-save game state to localStorage whenever it changes
   useEffect(() => {
-    // Don't save during initial mount
-    if (state.statistics.handsPlayed === 0 && state.balance === state.statistics.startingBalance) {
-      return;
-    }
-
     // Save to localStorage with debounce
     const timeoutId = setTimeout(() => {
       saveGameState(state);
     }, 500); // 500ms debounce
 
     return () => clearTimeout(timeoutId);
-  }, [state.balance, state.rules, state.statistics, state.countingSystem]);
+  }, [state.balance, state.rules, state.statistics, state.countingSystem, state.balanceHistory]);
 
   const value = useMemo(
     () => ({ state, dispatch, shoe, dealerAI, strategy }),

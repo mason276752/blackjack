@@ -5,6 +5,31 @@ export function AIControlPanel() {
   const { t } = useTranslation('ai');
   const { aiState, startAI, pauseAI, resumeAI, stopAI, setSpeed, resetStatistics } = useAIPlayer();
 
+  // 10 discrete speed levels (left = slowest, right = fastest)
+  const speedLevels = [5000, 3000, 2000, 1500, 1000, 500, 250, 100, 50, 10];
+
+  // Convert slider position (0-9) to speed
+  const positionToSpeed = (position: number): number => {
+    return speedLevels[position];
+  };
+
+  // Convert speed to slider position (0-9)
+  const speedToPosition = (speed: number): number => {
+    // Find closest speed level
+    let closestIndex = 0;
+    let minDiff = Math.abs(speed - speedLevels[0]);
+
+    for (let i = 1; i < speedLevels.length; i++) {
+      const diff = Math.abs(speed - speedLevels[i]);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestIndex = i;
+      }
+    }
+
+    return closestIndex;
+  };
+
   const handleTogglePlay = () => {
     if (!aiState.isEnabled) {
       startAI();
@@ -17,7 +42,6 @@ export function AIControlPanel() {
 
   const handleStop = () => {
     stopAI();
-    resetStatistics();
   };
 
   return (
@@ -80,29 +104,28 @@ export function AIControlPanel() {
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '14px' }}>
           <span style={{ color: '#94a3b8' }}>{t('gameSpeed')}:</span>
           <span style={{ color: '#fbbf24', fontWeight: 'bold' }}>
-            {aiState.speed < 100 ? t('veryFast') : aiState.speed > 1500 ? t('slow') : aiState.speed > 800 ? t('fast') : t('veryFast')}
+            {aiState.speed < 50 ? t('veryFast') : aiState.speed > 2000 ? t('slow') : aiState.speed > 500 ? t('fast') : t('veryFast')} ({aiState.speed}ms)
           </span>
         </div>
         <input
           type="range"
-          min="50"
-          max="2000"
-          step="50"
-          value={2050 - aiState.speed}
-          onChange={(e) => setSpeed(2050 - Number(e.target.value))}
-          disabled={!aiState.isEnabled}
+          min="0"
+          max="9"
+          step="1"
+          value={speedToPosition(aiState.speed)}
+          onChange={(e) => setSpeed(positionToSpeed(Number(e.target.value)))}
           style={{
             width: '100%',
             height: '6px',
             borderRadius: '3px',
             outline: 'none',
-            cursor: aiState.isEnabled ? 'pointer' : 'not-allowed',
+            cursor: 'pointer',
             accentColor: '#8b5cf6',
           }}
         />
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
-          <span>{t('slow')}</span>
-          <span>{t('fast')}</span>
+          <span>{t('slow')} (5000ms)</span>
+          <span>{t('fast')} (10ms)</span>
         </div>
       </div>
 
@@ -183,33 +206,64 @@ export function AIControlPanel() {
 
       {/* AI Statistics */}
       {aiState.isEnabled && (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '12px',
-            fontSize: '13px',
-          }}
-        >
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ color: '#94a3b8', marginBottom: '4px' }}>{t('roundsPlayed')}</div>
-            <div style={{ color: '#22c55e', fontWeight: 'bold', fontSize: '18px' }}>
-              {aiState.statistics.roundsPlayed}
+        <>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '12px',
+              fontSize: '13px',
+              marginBottom: '12px',
+            }}
+          >
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ color: '#94a3b8', marginBottom: '4px' }}>{t('roundsPlayed')}</div>
+              <div style={{ color: '#22c55e', fontWeight: 'bold', fontSize: '18px' }}>
+                {aiState.statistics.roundsPlayed}
+              </div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ color: '#94a3b8', marginBottom: '4px' }}>{t('decisionsCount')}</div>
+              <div style={{ color: '#3b82f6', fontWeight: 'bold', fontSize: '18px' }}>
+                {aiState.statistics.decisionsCount}
+              </div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ color: '#94a3b8', marginBottom: '4px' }}>{t('avgBetSize')}</div>
+              <div style={{ color: '#fbbf24', fontWeight: 'bold', fontSize: '18px' }}>
+                ${aiState.statistics.avgBetSize > 0 ? aiState.statistics.avgBetSize.toFixed(0) : '0'}
+              </div>
             </div>
           </div>
+
+          {/* Reset Statistics Button */}
           <div style={{ textAlign: 'center' }}>
-            <div style={{ color: '#94a3b8', marginBottom: '4px' }}>{t('decisionsCount')}</div>
-            <div style={{ color: '#3b82f6', fontWeight: 'bold', fontSize: '18px' }}>
-              {aiState.statistics.decisionsCount}
-            </div>
+            <button
+              onClick={resetStatistics}
+              style={{
+                padding: '6px 16px',
+                fontSize: '12px',
+                fontWeight: 'bold',
+                borderRadius: '6px',
+                border: '1px solid rgba(148, 163, 184, 0.3)',
+                cursor: 'pointer',
+                backgroundColor: 'rgba(148, 163, 184, 0.1)',
+                color: '#94a3b8',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(148, 163, 184, 0.2)';
+                e.currentTarget.style.color = '#cbd5e1';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(148, 163, 184, 0.1)';
+                e.currentTarget.style.color = '#94a3b8';
+              }}
+            >
+              🔄 {t('resetStats')}
+            </button>
           </div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ color: '#94a3b8', marginBottom: '4px' }}>{t('avgBetSize')}</div>
-            <div style={{ color: '#fbbf24', fontWeight: 'bold', fontSize: '18px' }}>
-              ${aiState.statistics.avgBetSize > 0 ? aiState.statistics.avgBetSize.toFixed(0) : '0'}
-            </div>
-          </div>
-        </div>
+        </>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import { GameState, GameRules } from '../../types/game.types';
+import { GameState, GameRules, BalanceHistory } from '../../types/game.types';
 import { CountingSystem } from '../../types/game.types';
 
 /**
@@ -20,6 +20,8 @@ interface PersistedGameData {
   balance: number;
   statistics: GameState['statistics'];
   countingSystem: CountingSystem;
+  balanceHistory: BalanceHistory; // Balance history tracking
+  selectedPreset?: 'vegas' | 'single' | 'atlantic' | 'custom'; // Rule preset selection
   lastSaved: string; // ISO timestamp
   version: string; // App version for migration
 }
@@ -29,11 +31,16 @@ interface PersistedGameData {
  */
 export function saveGameState(state: GameState): void {
   try {
+    // Load existing data to preserve selectedPreset
+    const existingData = loadGameState();
+
     const dataToSave: PersistedGameData = {
       rules: state.rules,
       balance: state.balance,
       statistics: state.statistics,
       countingSystem: state.countingSystem,
+      balanceHistory: state.balanceHistory,
+      selectedPreset: existingData?.selectedPreset, // Preserve existing selectedPreset
       lastSaved: new Date().toISOString(),
       version: '1.0.0',
     };
@@ -58,6 +65,23 @@ export function loadGameState(): PersistedGameData | null {
     if (!parsed.rules || typeof parsed.balance !== 'number' || !parsed.statistics) {
       console.warn('[Storage] Invalid saved data structure, ignoring');
       return null;
+    }
+
+    // Initialize balanceHistory if missing (backward compatibility)
+    if (!parsed.balanceHistory) {
+      parsed.balanceHistory = {
+        snapshots: [],
+        maxSize: 1000,
+      };
+    }
+
+    // Validate balanceHistory structure
+    if (!Array.isArray(parsed.balanceHistory.snapshots)) {
+      console.warn('[Storage] Invalid balanceHistory structure, resetting');
+      parsed.balanceHistory = {
+        snapshots: [],
+        maxSize: 1000,
+      };
     }
 
     return parsed;
@@ -97,6 +121,33 @@ export function getLastSavedTime(): Date | null {
   try {
     const savedData = loadGameState();
     return savedData ? new Date(savedData.lastSaved) : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Save selected preset to localStorage
+ */
+export function saveSelectedPreset(preset: 'vegas' | 'single' | 'atlantic' | 'custom'): void {
+  try {
+    const savedData = loadGameState();
+    if (savedData) {
+      savedData.selectedPreset = preset;
+      localStorage.setItem(STORAGE_KEYS.GAME_STATE, JSON.stringify(savedData));
+    }
+  } catch (error) {
+    console.error('[Storage] Failed to save selected preset:', error);
+  }
+}
+
+/**
+ * Load selected preset from localStorage
+ */
+export function loadSelectedPreset(): 'vegas' | 'single' | 'atlantic' | 'custom' | null {
+  try {
+    const savedData = loadGameState();
+    return savedData?.selectedPreset || null;
   } catch {
     return null;
   }

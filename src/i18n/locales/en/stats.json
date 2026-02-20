@@ -26,5 +26,18 @@
     "expected": "Playing as expected",
     "below": "Playing worse than expected"
   },
-  "stats": "Statistics"
+  "stats": "Statistics",
+  "balanceHistory": "Balance History",
+  "handNumber": "Hand",
+  "balance": "Balance",
+  "profit": "Profit",
+  "startingBalance": "Starting Balance",
+  "currentBalance": "Current Balance",
+  "totalChange": "Total Change",
+  "peakBalance": "Peak Balance",
+  "lowestBalance": "Lowest Balance",
+  "dataPoints": "Data Points",
+  "chartNote": "Showing {{count}} of {{max}} most recent hands",
+  "maxReached": "Showing last {{max}} hands (maximum reached)",
+  "noBalanceHistory": "No balance history available. Play some hands to start tracking!"
 }

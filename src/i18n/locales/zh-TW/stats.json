@@ -26,5 +26,18 @@
     "expected": "符合預期表現",
     "below": "表現低於預期"
   },
-  "stats": "統計"
+  "stats": "統計",
+  "balanceHistory": "餘額歷史",
+  "handNumber": "手牌",
+  "balance": "餘額",
+  "profit": "損益",
+  "startingBalance": "起始餘額",
+  "currentBalance": "當前餘額",
+  "totalChange": "總變化",
+  "peakBalance": "最高餘額",
+  "lowestBalance": "最低餘額",
+  "dataPoints": "資料點數",
+  "chartNote": "顯示最近 {{count}} / {{max}} 手牌",
+  "maxReached": "顯示最近 {{max}} 手牌（已達上限）",
+  "noBalanceHistory": "尚無餘額歷史記錄。開始遊戲以追蹤餘額變化！"
 }

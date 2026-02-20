@@ -144,6 +144,18 @@ export function useAIPlayer() {
         const totalBets = newStats.avgBetSize * newStats.roundsPlayed;
         newStats.roundsPlayed += 1;
         newStats.avgBetSize = (totalBets + value) / newStats.roundsPlayed;
+
+        // Debug log
+        if (import.meta.env.DEV) {
+          console.log('[AI Stats] Updated bet stats:', {
+            type,
+            value,
+            oldRounds: newStats.roundsPlayed - 1,
+            newRounds: newStats.roundsPlayed,
+            oldAvg: prev.statistics.avgBetSize,
+            newAvg: newStats.avgBetSize,
+          });
+        }
       } else if (type === 'decision') {
         newStats.decisionsCount += 1;
       }
@@ -288,15 +300,10 @@ export function useAIPlayer() {
       return;
     }
 
-    if (state.currentBet > 0) {
-      // Bet already placed
-      transitionToPhase('dealing_cards');
-      return;
-    }
-
-    // Move to placing bet
+    // ALWAYS go through placing_bet phase to ensure statistics are updated
+    // (even if bet is already placed from COMPLETE_ROUND restoring lastBet)
     transitionToPhase('placing_bet');
-  }, [logAIState, state.currentBet, state.phase, transitionToPhase]);
+  }, [logAIState, state.phase, transitionToPhase]);
 
   const handlePlacingBetPhase = useCallback(() => {
     const decision = aiPlayer.calculateBet(state.balance, effectiveCount, 25, 5000);
@@ -499,7 +506,8 @@ export function useAIPlayer() {
   }, [aiState.currentDecision, gameLogic, logAIState, setAIState, state.hands, state.phase, t, transitionToPhase]);
 
   const handleWaitingResolutionPhase = useCallback(() => {
-    const waitTime = Math.max(aiState.speed * 2, 1000);
+    // Use AI speed for resolution wait time (minimum 10ms for very fast play)
+    const waitTime = Math.max(aiState.speed, 10);
     const elapsed = Date.now() - aiState.phaseEnterTime;
 
     if (elapsed < waitTime) {
@@ -705,10 +713,22 @@ export function useAIPlayer() {
       stuckDetected: false,
       errorMessage: null,
     }));
+    // Clear dealer speed from localStorage when AI stops
+    try {
+      localStorage.removeItem('ai_dealer_speed');
+    } catch (error) {
+      console.error('[AIPlayer] Failed to remove dealer speed:', error);
+    }
   }, [logAIState, setAIState]);
 
   const setSpeed = useCallback((speed: number) => {
     setAIState(prev => ({ ...prev, speed }));
+    // Save speed to localStorage so dealer can use it
+    try {
+      localStorage.setItem('ai_dealer_speed', String(speed));
+    } catch (error) {
+      console.error('[AIPlayer] Failed to save dealer speed:', error);
+    }
   }, [setAIState]);
 
   const resetStatistics = useCallback(() => {

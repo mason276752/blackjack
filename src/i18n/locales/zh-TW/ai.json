@@ -11,6 +11,7 @@
   "roundsPlayed": "已玩回合",
   "decisionsCount": "決策次數",
   "avgBetSize": "平均下注",
+  "resetStats": "重置統計",
   "errorDetected": "檢測到錯誤",
   "retry": "重試",
   "waitingForDecision": "等待下一個決策...",
